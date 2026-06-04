@@ -1,31 +1,43 @@
-import { motion } from 'framer-motion'
+import { useRef } from 'react'
+import { motion, useScroll, useTransform } from 'framer-motion'
 import { ArrowRight, Play } from 'lucide-react'
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 32 },
+  hidden: { opacity: 0, y: 36 },
   show: (i: number) => ({
     opacity: 1,
     y: 0,
     transition: {
       delay: i * 0.13,
-      duration: 0.8,
+      duration: 0.85,
       ease: [0.22, 1, 0.36, 1],
     },
   }),
 }
 
 export default function Hero() {
+  const sectionRef = useRef<HTMLElement>(null)
+  const { scrollY } = useScroll()
+
+  /* Parallax — ring drifts up faster than the content */
+  const yRing    = useTransform(scrollY, [0, 700], [0,  -80])
+  const yBadges  = useTransform(scrollY, [0, 700], [0, -100])
+  const opDecor  = useTransform(scrollY, [0, 500], [1,    0])
+
   return (
-    <section className="relative min-h-screen flex flex-col justify-center overflow-hidden noise-overlay">
-      {/* Base */}
+    <section
+      ref={sectionRef}
+      className="relative min-h-screen flex flex-col justify-center overflow-hidden noise-overlay"
+    >
+      {/* ── Base ──────────────────────────────────────────────── */}
       <div className="absolute inset-0 bg-surface-offwhite" />
 
-      {/* Atmospheric gradient mesh — gives depth without muddying the white */}
+      {/* Atmospheric gradient mesh */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
           background: `
-            radial-gradient(ellipse 65% 55% at 5% 30%, rgba(26,42,79,0.05) 0%, transparent 100%),
+            radial-gradient(ellipse 65% 55% at 5% 30%,  rgba(26,42,79,0.05) 0%, transparent 100%),
             radial-gradient(ellipse 55% 65% at 95% 80%, rgba(26,42,79,0.04) 0%, transparent 100%),
             radial-gradient(ellipse 50% 40% at 70% 5%,  rgba(201,162,75,0.05) 0%, transparent 100%)
           `,
@@ -37,7 +49,7 @@ export default function Hero() {
       <div className="absolute -bottom-[10%] -left-[5%] w-[500px] h-[500px] rounded-full bg-brand/[0.03] blur-[120px] pointer-events-none" />
       <div className="absolute top-[35%] right-[18%] w-[280px] h-[280px] rounded-full bg-gold/[0.07] blur-[90px] pointer-events-none" />
 
-      {/* Fine grid texture — denser + slightly more visible than before */}
+      {/* Fine grid texture */}
       <div
         className="absolute inset-0 opacity-[0.04] pointer-events-none"
         style={{
@@ -47,16 +59,41 @@ export default function Hero() {
         }}
       />
 
-      {/* Content — reduced top padding so headline appears sooner */}
+      {/* ── Decorative geometric ring — parallax + CSS float ──── */}
+      <motion.div
+        style={{ y: yRing, opacity: opDecor }}
+        className="absolute top-[6%] right-[1%] pointer-events-none hidden lg:block"
+      >
+        <div
+          className="relative w-[300px] h-[300px] xl:w-[360px] xl:h-[360px]"
+          style={{ animation: 'float-gentle 11s ease-in-out infinite' }}
+        >
+          {/* Outer ring */}
+          <div className="absolute inset-0 rounded-full border border-brand/[0.07]" />
+          {/* Mid ring — gold tint */}
+          <div
+            className="absolute inset-8 rounded-full border border-gold/[0.10]"
+            style={{ animation: 'float-gentle 11s ease-in-out infinite 1.5s' }}
+          />
+          {/* Inner ring */}
+          <div className="absolute inset-16 rounded-full border border-brand/[0.05]" />
+          {/* Slow-spinning accent ring */}
+          <div
+            className="absolute inset-3 rounded-full border-t border-r border-brand/[0.04]"
+            style={{ animation: 'spin-slow 22s linear infinite' }}
+          />
+          {/* Center dot */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-gold/40" />
+        </div>
+      </motion.div>
+
+      {/* ── Main content ──────────────────────────────────────── */}
       <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-10 pt-28 pb-20 lg:pt-36 lg:pb-24">
         <div className="max-w-5xl">
 
           {/* Eyebrow */}
           <motion.div
-            custom={0}
-            variants={fadeUp}
-            initial="hidden"
-            animate="show"
+            custom={0} variants={fadeUp} initial="hidden" animate="show"
             className="inline-flex items-center gap-2 mb-8"
           >
             <span className="flex h-1.5 w-1.5 rounded-full bg-gold" />
@@ -65,13 +102,10 @@ export default function Hero() {
             </span>
           </motion.div>
 
-          {/* Line 1 */}
+          {/* Headline — clip-path slide-up per line */}
           <div className="overflow-hidden mb-4">
             <motion.h1
-              custom={1}
-              variants={fadeUp}
-              initial="hidden"
-              animate="show"
+              custom={1} variants={fadeUp} initial="hidden" animate="show"
               className="font-display text-[clamp(2rem,7.5vw,6.5rem)] font-semibold leading-[1.02] tracking-[-0.02em] text-brand"
               style={{ fontVariationSettings: "'opsz' 144, 'wght' 600" }}
             >
@@ -79,28 +113,19 @@ export default function Hero() {
             </motion.h1>
           </div>
 
-          {/* Line 2 — "vea," in gold outline + animated underline */}
           <div className="overflow-hidden mb-4">
             <motion.h1
-              custom={2}
-              variants={fadeUp}
-              initial="hidden"
-              animate="show"
+              custom={2} variants={fadeUp} initial="hidden" animate="show"
               className="font-display text-[clamp(2rem,7.5vw,6.5rem)] font-semibold leading-[1.02] tracking-[-0.02em] flex flex-wrap items-baseline gap-x-5"
               style={{ fontVariationSettings: "'opsz' 144, 'wght' 600" }}
             >
               <span className="text-brand">negocio se</span>
 
+              {/* Gold outline word + animated underline */}
               <span className="relative inline-block">
-                <span
-                  style={{
-                    WebkitTextStroke: '1.5px #C9A24B',
-                    color: 'transparent',
-                  }}
-                >
+                <span style={{ WebkitTextStroke: '1.5px #C9A24B', color: 'transparent' }}>
                   vea,
                 </span>
-                {/* Underline that draws left-to-right after the headline finishes */}
                 <motion.span
                   aria-hidden="true"
                   className="absolute left-0 bottom-0 h-px w-full bg-gold/60 rounded-full"
@@ -113,13 +138,9 @@ export default function Hero() {
             </motion.h1>
           </div>
 
-          {/* Line 3 */}
           <div className="overflow-hidden mb-6">
             <motion.h1
-              custom={3}
-              variants={fadeUp}
-              initial="hidden"
-              animate="show"
+              custom={3} variants={fadeUp} initial="hidden" animate="show"
               className="font-display text-[clamp(2rem,7.5vw,6.5rem)] font-semibold leading-[1.02] tracking-[-0.02em] text-brand"
               style={{ fontVariationSettings: "'opsz' 144, 'wght' 600" }}
             >
@@ -129,10 +150,7 @@ export default function Hero() {
 
           {/* Subtitle */}
           <motion.p
-            custom={4}
-            variants={fadeUp}
-            initial="hidden"
-            animate="show"
+            custom={4} variants={fadeUp} initial="hidden" animate="show"
             className="font-body text-base lg:text-lg text-brand/55 max-w-xl leading-relaxed mb-12"
           >
             Agencia de publicidad y diseño en Jalapa. Creamos diseños
@@ -141,10 +159,7 @@ export default function Hero() {
 
           {/* CTAs */}
           <motion.div
-            custom={5}
-            variants={fadeUp}
-            initial="hidden"
-            animate="show"
+            custom={5} variants={fadeUp} initial="hidden" animate="show"
             className="flex flex-col sm:flex-row items-start sm:items-center gap-4"
           >
             <a
@@ -169,20 +184,23 @@ export default function Hero() {
           </motion.div>
         </div>
 
-        {/* Floating stat badges — desktop only */}
-        <motion.div
-          initial={{ opacity: 0, x: 40, y: 20 }}
-          animate={{ opacity: 1, x: 0, y: 0 }}
-          transition={{ delay: 0.9, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-          className="hidden lg:flex absolute right-10 top-1/2 -translate-y-1/2 flex-col gap-4"
-        >
-          <StatBadge value="100+" label="Proyectos entregados" />
-          <StatBadge value="3" label="Departamentos" gold />
-          <StatBadge value="5★" label="Satisfacción" />
-        </motion.div>
+        {/* ── Floating stat badges — parallax ───────────────────── */}
+        <div className="hidden lg:block absolute right-10 top-1/2 -translate-y-1/2">
+          <motion.div
+            style={{ y: yBadges }}
+            initial={{ opacity: 0, x: 40 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.9, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+            className="flex flex-col gap-4"
+          >
+            <StatBadge value="100+" label="Proyectos entregados" />
+            <StatBadge value="3"    label="Departamentos" gold />
+            <StatBadge value="5★"  label="Satisfacción" />
+          </motion.div>
+        </div>
       </div>
 
-      {/* Bottom fade to next section */}
+      {/* Bottom fade */}
       <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-surface-white to-transparent pointer-events-none z-10" />
     </section>
   )

@@ -5,6 +5,18 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ─── Keyframes for decorative CSS animations ─────────────────────────────── */
+@keyframes float-gentle {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  40%       { transform: translateY(-14px) rotate(2.5deg); }
+  75%       { transform: translateY(5px) rotate(-1.5deg); }
+}
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+/* ─────────────────────────────────────────────────────────────────────────── */
+
 @layer base {
   html {
     scroll-behavior: smooth;
@@ -54,6 +66,7 @@
   }
 
   /* Smooth scrollbar */
+
   ::-webkit-scrollbar {
     width: 6px;
   }

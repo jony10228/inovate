@@ -1,6 +1,6 @@
-import { useRef } from 'react'
-import { motion, useInView } from 'framer-motion'
-import { Sparkles, Award, Users, TrendingUp, ArrowRight } from 'lucide-react'
+import { useState, useRef } from 'react'
+import { motion, AnimatePresence, useInView } from 'framer-motion'
+import { Sparkles, Award, Users, TrendingUp, Plus } from 'lucide-react'
 
 const reasons = [
   {
@@ -33,7 +33,10 @@ const reasons = [
   },
 ]
 
+type Reason = (typeof reasons)[0]
+
 export default function WhyUs() {
+  const [openItem, setOpenItem] = useState<string>('01')
   const ref = useRef<HTMLDivElement>(null)
   const inView = useInView(ref, { once: true, margin: '-80px' })
 
@@ -69,52 +72,120 @@ export default function WhyUs() {
           </h2>
         </motion.div>
 
-        {/* Reasons — editorial full-width list */}
-        <div ref={ref}>
-          {reasons.map((reason, i) => {
-            const Icon = reason.icon
-            return (
-              <motion.div
-                key={reason.number}
-                initial={{ opacity: 0, y: 24 }}
-                animate={inView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.65, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
-                className="group grid grid-cols-[2.5rem_1fr] lg:grid-cols-[3.5rem_2.5rem_1fr_auto] items-start gap-x-5 lg:gap-x-8 py-8 lg:py-10 border-t border-brand/[0.08] -mx-6 px-6 lg:-mx-10 lg:px-10 hover:bg-white/60 transition-all duration-300 rounded-2xl cursor-default"
-              >
-                {/* Number */}
-                <span className="font-body text-xs font-medium tracking-[0.15em] text-brand/20 group-hover:text-brand/35 transition-colors duration-200 pt-1 hidden lg:block">
-                  {reason.number}
-                </span>
-
-                {/* Icon */}
-                <div className="flex-shrink-0 w-9 h-9 rounded-lg bg-surface-mist flex items-center justify-center text-brand/40 group-hover:bg-brand group-hover:text-white group-hover:scale-110 transition-all duration-300 mt-0.5 col-start-1 lg:col-start-2">
-                  <Icon size={17} strokeWidth={1.5} />
-                </div>
-
-                {/* Content */}
-                <div className="col-start-2 lg:col-start-3">
-                  <h3
-                    className="font-display text-xl lg:text-2xl font-semibold text-brand leading-tight mb-2"
-                    style={{ fontVariationSettings: "'opsz' 72" }}
-                  >
-                    {reason.title}
-                  </h3>
-                  <p className="font-body text-sm text-brand/55 leading-relaxed max-w-xl">
-                    {reason.description}
-                  </p>
-                </div>
-
-                {/* Arrow — desktop only, revealed on hover */}
-                <div className="hidden lg:flex items-center self-center opacity-0 translate-x-3 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 text-brand/25">
-                  <ArrowRight size={18} />
-                </div>
-              </motion.div>
-            )
-          })}
-          {/* closing border */}
-          <div className="border-t border-brand/[0.08] -mx-6 lg:-mx-10" />
+        {/* Accordion */}
+        <div ref={ref} className="-mx-6 lg:-mx-10">
+          {reasons.map((reason, i) => (
+            <AccordionItem
+              key={reason.number}
+              reason={reason}
+              isOpen={openItem === reason.number}
+              onToggle={() =>
+                setOpenItem(openItem === reason.number ? '' : reason.number)
+              }
+              index={i}
+              inView={inView}
+            />
+          ))}
+          {/* Bottom border */}
+          <div className="border-t border-brand/[0.08] mx-6 lg:mx-10" />
         </div>
       </div>
     </section>
+  )
+}
+
+type AccordionItemProps = {
+  reason: Reason
+  isOpen: boolean
+  onToggle: () => void
+  index: number
+  inView: boolean
+}
+
+function AccordionItem({ reason, isOpen, onToggle, index, inView }: AccordionItemProps) {
+  const Icon = reason.icon
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.65, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
+      className="border-t border-brand/[0.08] mx-6 lg:mx-10"
+    >
+      {/* Header — always visible, clickable */}
+      <button
+        type="button"
+        onClick={onToggle}
+        className="w-full flex items-center gap-5 lg:gap-10 py-7 lg:py-9 text-left group"
+      >
+        {/* Large outline number — the main visual anchor */}
+        <span
+          className="font-display text-[3rem] lg:text-[4.5rem] font-semibold leading-none flex-shrink-0 w-14 lg:w-24 text-right transition-all duration-300 tabular-nums"
+          style={{
+            fontVariationSettings: "'opsz' 144",
+            WebkitTextStroke: isOpen ? '2px #1A2A4F' : '1.5px rgba(26,42,79,0.18)',
+            color: 'transparent',
+          }}
+        >
+          {reason.number}
+        </span>
+
+        {/* Icon + Title */}
+        <div className="flex-1 flex items-center gap-4 min-w-0">
+          <div
+            className={`w-8 h-8 lg:w-9 lg:h-9 rounded-lg flex-shrink-0 flex items-center justify-center transition-all duration-300 ${
+              isOpen
+                ? 'bg-brand text-white scale-110'
+                : 'bg-surface-mist text-brand/40 group-hover:bg-brand/10'
+            }`}
+          >
+            <Icon size={16} strokeWidth={1.5} />
+          </div>
+          <h3
+            className={`font-display text-xl lg:text-2xl font-semibold leading-tight transition-colors duration-300 ${
+              isOpen ? 'text-brand' : 'text-brand/65 group-hover:text-brand/90'
+            }`}
+            style={{ fontVariationSettings: "'opsz' 72" }}
+          >
+            {reason.title}
+          </h3>
+        </div>
+
+        {/* Toggle icon */}
+        <div
+          className={`flex-shrink-0 w-8 h-8 rounded-full border flex items-center justify-center transition-all duration-300 ${
+            isOpen
+              ? 'bg-brand border-brand text-white'
+              : 'border-brand/15 text-brand/40 group-hover:border-brand/30'
+          }`}
+        >
+          <motion.span
+            animate={{ rotate: isOpen ? 45 : 0 }}
+            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            className="flex"
+          >
+            <Plus size={14} />
+          </motion.span>
+        </div>
+      </button>
+
+      {/* Expandable description */}
+      <AnimatePresence initial={false}>
+        {isOpen && (
+          <motion.div
+            key="description"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
+            className="overflow-hidden"
+          >
+            <p className="font-body text-base text-brand/60 leading-relaxed pb-8 lg:pb-10 lg:pl-[8.5rem] pr-16">
+              {reason.description}
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
   )
 }
