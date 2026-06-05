@@ -1,191 +1,137 @@
-import { useState, useRef } from 'react'
-import { motion, AnimatePresence, useInView } from 'framer-motion'
-import { Sparkles, Award, Users, TrendingUp, Plus } from 'lucide-react'
+import { motion, useInView } from 'framer-motion'
+import { useRef } from 'react'
+import { Reveal } from '../animations/Reveal'
 
 const reasons = [
   {
     number: '01',
-    icon: Sparkles,
     title: 'Creatividad que impulsa marcas',
     description:
-      'No hacemos templates. Cada diseño nace de cero, pensado específicamente para tu negocio. Tu marca merece algo único y memorable que nadie más tenga.',
+      'No hacemos templates. Cada diseño nace de cero, pensado específicamente para tu negocio. Tu marca merece algo único y memorable.',
   },
   {
     number: '02',
-    icon: Award,
     title: 'Diseños que hacen destacar',
     description:
-      'Piezas gráficas de nivel profesional que te diferencian de la competencia y hacen que tu negocio se vea serio, confiable y atractivo.',
+      'Piezas gráficas de nivel profesional que te diferencian de la competencia y hacen que tu negocio se vea serio y confiable.',
   },
   {
     number: '03',
-    icon: Users,
     title: 'Lo personalizamos para ti',
     description:
-      'Trabajamos contigo, no solo para ti. Escuchamos tus ideas, las refinamos juntos y entregamos exactamente lo que necesitas para tu marca.',
+      'Trabajamos contigo, no solo para ti. Escuchamos tus ideas y entregamos exactamente lo que necesitas para tu marca.',
   },
   {
     number: '04',
-    icon: TrendingUp,
     title: 'Resultados que hablan por sí solos',
     description:
-      'Más de 100 proyectos entregados en Jalapa, Jutiapa y toda Guatemala. Clientes que regresan porque el diseño funcionó y su marca creció.',
+      'Más de 100 proyectos en Jalapa, Jutiapa y toda Guatemala. Clientes que regresan porque el diseño funcionó.',
   },
 ]
 
-type Reason = (typeof reasons)[0]
-
 export default function WhyUs() {
-  const [openItem, setOpenItem] = useState<string>('01')
-  const ref = useRef<HTMLDivElement>(null)
-  const inView = useInView(ref, { once: true, margin: '-80px' })
+  const headerRef = useRef<HTMLDivElement>(null)
+  const headerInView = useInView(headerRef, { once: true, margin: '-60px' })
 
   return (
-    <section className="relative py-28 lg:py-40 bg-surface-offwhite">
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-px h-20 bg-gradient-to-b from-transparent to-brand/10" />
+    <section className="relative py-24 lg:py-36 bg-[#fafafa]">
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-px h-20 bg-gradient-to-b from-transparent to-gray-200" />
 
       <div className="max-w-7xl mx-auto px-6 lg:px-10">
+
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-60px' }}
-          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          className="mb-20 lg:mb-24"
-        >
-          <div className="flex items-center gap-3 mb-6">
-            <span className="h-px w-10 bg-gold" />
-            <span className="text-xs font-medium tracking-[0.2em] uppercase text-brand/40 font-body">
+        <div ref={headerRef} className="mb-16 lg:mb-24">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={headerInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6 }}
+            className="flex items-center gap-3 mb-6"
+          >
+            <span className="h-px w-8 bg-gold" />
+            <span className="text-xs tracking-[0.3em] uppercase text-gray-400 font-body">
               Por Qué Elegirnos
             </span>
+          </motion.div>
+
+          <div className="overflow-hidden">
+            <motion.h2
+              initial={{ y: '105%' }}
+              animate={headerInView ? { y: 0 } : {}}
+              transition={{ duration: 0.85, ease: [0.25, 0.1, 0.25, 1] }}
+              className="font-display font-semibold text-[clamp(2.2rem,5vw,3.8rem)] leading-[1.05] tracking-[-0.02em] text-brand max-w-2xl"
+              style={{ fontVariationSettings: "'opsz' 144, 'wght' 600" }}
+            >
+              Cada detalle,{' '}
+              <span style={{ WebkitTextStroke: '1.5px #1A2A4F', color: 'transparent' }}>
+                pensado
+              </span>{' '}
+              para tu marca.
+            </motion.h2>
           </div>
-
-          <h2
-            className="font-display text-[clamp(2.2rem,5vw,4rem)] font-semibold leading-[1.08] tracking-[-0.02em] text-brand max-w-2xl"
-            style={{ fontVariationSettings: "'opsz' 144, 'wght' 600" }}
-          >
-            Cada detalle,{' '}
-            <span style={{ WebkitTextStroke: '1.5px #1A2A4F', color: 'transparent' }}>
-              pensado
-            </span>{' '}
-            para tu marca.
-          </h2>
-        </motion.div>
-
-        {/* Accordion */}
-        <div ref={ref} className="-mx-6 lg:-mx-10">
-          {reasons.map((reason, i) => (
-            <AccordionItem
-              key={reason.number}
-              reason={reason}
-              isOpen={openItem === reason.number}
-              onToggle={() =>
-                setOpenItem(openItem === reason.number ? '' : reason.number)
-              }
-              index={i}
-              inView={inView}
-            />
-          ))}
-          {/* Bottom border */}
-          <div className="border-t border-brand/[0.08] mx-6 lg:mx-10" />
         </div>
+
+        {/* ── 2×2 bordered grid ──────────────────────────────────── */}
+        <div className="border border-gray-100 rounded-2xl overflow-hidden">
+          <div className="grid grid-cols-1 md:grid-cols-2">
+            {reasons.map((reason, i) => (
+              <ReasonCell key={reason.number} reason={reason} index={i} />
+            ))}
+          </div>
+        </div>
+
       </div>
     </section>
   )
 }
 
-type AccordionItemProps = {
-  reason: Reason
-  isOpen: boolean
-  onToggle: () => void
-  index: number
-  inView: boolean
-}
+function ReasonCell({ reason, index }: { reason: (typeof reasons)[0]; index: number }) {
+  const ref = useRef<HTMLDivElement>(null)
+  const inView = useInView(ref, { once: true, margin: '-60px' })
 
-function AccordionItem({ reason, isOpen, onToggle, index, inView }: AccordionItemProps) {
-  const Icon = reason.icon
+  /* Border logic: right-border on left-column items, top-border on bottom-row items */
+  const borderClasses = [
+    'md:border-b md:border-r border-gray-100', // 0 — top-left
+    'md:border-b border-gray-100',             // 1 — top-right
+    'md:border-r border-gray-100',             // 2 — bottom-left
+    '',                                         // 3 — bottom-right
+  ][index]
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      ref={ref}
+      initial={{ opacity: 0, y: 24 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.65, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
-      className="border-t border-brand/[0.08] mx-6 lg:mx-10"
+      transition={{ duration: 0.7, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
+      className={`group relative p-10 lg:p-14 hover:bg-gray-50/60 transition-all duration-500 overflow-hidden ${
+        index < 2 ? 'border-t md:border-t-0 border-gray-100' : 'border-t border-gray-100'
+      } ${index === 0 ? '!border-t-0' : ''} ${borderClasses}`}
     >
-      {/* Header — always visible, clickable */}
-      <button
-        type="button"
-        onClick={onToggle}
-        className="w-full flex items-center gap-5 lg:gap-10 py-7 lg:py-9 text-left group"
+      {/* Large decorative number — the main visual anchor */}
+      <div
+        className="font-display font-bold leading-none text-brand/[0.07] group-hover:text-brand/[0.13] transition-all duration-500 mb-6 select-none"
+        style={{
+          fontSize: 'clamp(4.5rem, 8vw, 7rem)',
+          fontVariationSettings: "'opsz' 144, 'wght' 700",
+        }}
+        aria-hidden="true"
       >
-        {/* Large outline number — the main visual anchor */}
-        <span
-          className="font-display text-[3rem] lg:text-[4.5rem] font-semibold leading-none flex-shrink-0 w-14 lg:w-24 text-right transition-all duration-300 tabular-nums"
-          style={{
-            fontVariationSettings: "'opsz' 144",
-            WebkitTextStroke: isOpen ? '2px #1A2A4F' : '1.5px rgba(26,42,79,0.18)',
-            color: 'transparent',
-          }}
+        {reason.number}
+      </div>
+
+      {/* Title */}
+      <Reveal>
+        <h3
+          className="font-display text-lg lg:text-xl font-semibold text-brand mb-3 leading-tight"
+          style={{ fontVariationSettings: "'opsz' 72" }}
         >
-          {reason.number}
-        </span>
+          {reason.title}
+        </h3>
+      </Reveal>
 
-        {/* Icon + Title */}
-        <div className="flex-1 flex items-center gap-4 min-w-0">
-          <div
-            className={`w-8 h-8 lg:w-9 lg:h-9 rounded-lg flex-shrink-0 flex items-center justify-center transition-all duration-300 ${
-              isOpen
-                ? 'bg-brand text-white scale-110'
-                : 'bg-surface-mist text-brand/40 group-hover:bg-brand/10'
-            }`}
-          >
-            <Icon size={16} strokeWidth={1.5} />
-          </div>
-          <h3
-            className={`font-display text-xl lg:text-2xl font-semibold leading-tight transition-colors duration-300 ${
-              isOpen ? 'text-brand' : 'text-brand/65 group-hover:text-brand/90'
-            }`}
-            style={{ fontVariationSettings: "'opsz' 72" }}
-          >
-            {reason.title}
-          </h3>
-        </div>
-
-        {/* Toggle icon */}
-        <div
-          className={`flex-shrink-0 w-8 h-8 rounded-full border flex items-center justify-center transition-all duration-300 ${
-            isOpen
-              ? 'bg-brand border-brand text-white'
-              : 'border-brand/15 text-brand/40 group-hover:border-brand/30'
-          }`}
-        >
-          <motion.span
-            animate={{ rotate: isOpen ? 45 : 0 }}
-            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="flex"
-          >
-            <Plus size={14} />
-          </motion.span>
-        </div>
-      </button>
-
-      {/* Expandable description */}
-      <AnimatePresence initial={false}>
-        {isOpen && (
-          <motion.div
-            key="description"
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
-            className="overflow-hidden"
-          >
-            <p className="font-body text-base text-brand/60 leading-relaxed pb-8 lg:pb-10 lg:pl-[8.5rem] pr-16">
-              {reason.description}
-            </p>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Description */}
+      <p className="font-body text-sm text-gray-400 leading-relaxed max-w-sm">
+        {reason.description}
+      </p>
     </motion.div>
   )
 }

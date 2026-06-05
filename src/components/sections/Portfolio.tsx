@@ -9,7 +9,9 @@ const clients = [
     category: 'Logística & Courier',
     tagline: null,
     description: 'Identidad visual completa para servicio de encomiendas a nivel nacional.',
-    featured: true,
+    displayNum: '01',
+    featured: true,          // full-width hero
+    lgColSpan: 'lg:col-span-12',
   },
   {
     id: 'dexa',
@@ -17,7 +19,9 @@ const clients = [
     category: 'Industrial',
     tagline: 'Potencia que impulsa',
     description: 'Branding poderoso para empresa industrial de alto impacto.',
+    displayNum: '02',
     featured: false,
+    lgColSpan: 'lg:col-span-7',
   },
   {
     id: 'irene',
@@ -25,7 +29,9 @@ const clients = [
     category: 'Servicios Legales',
     tagline: 'Abogada & Notaria',
     description: 'Imagen profesional y elegante para despacho jurídico.',
+    displayNum: '03',
     featured: false,
+    lgColSpan: 'lg:col-span-5',
   },
   {
     id: 'steels',
@@ -33,7 +39,10 @@ const clients = [
     category: 'Industrial & Materiales',
     tagline: null,
     description: 'Diseño de marca para empresa de aceros y materiales.',
-    featured: true,
+    displayNum: '04',
+    featured: false,
+    strip: true,              // compact wide strip
+    lgColSpan: 'lg:col-span-12',
   },
 ]
 
@@ -41,16 +50,12 @@ type Client = (typeof clients)[0]
 
 const containerVariants = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.12 } },
+  show: { transition: { staggerChildren: 0.14 } },
 }
 
 const cardVariants = {
-  hidden: { opacity: 0, y: 32 },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.75, ease: [0.22, 1, 0.36, 1] },
-  },
+  hidden: { opacity: 0, y: 28 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] } },
 }
 
 export default function Portfolio() {
@@ -88,113 +93,159 @@ export default function Portfolio() {
               </span>{' '}
               con nosotros.
             </h2>
-
             <p className="font-body text-sm text-brand/50 max-w-xs leading-relaxed">
               Clientes reales, resultados reales. Cada marca con identidad propia.
             </p>
           </div>
         </motion.div>
 
-        {/* Asymmetric editorial grid */}
+        {/* Editorial grid */}
         <motion.div
           ref={ref}
           variants={containerVariants}
           initial="hidden"
           animate={inView ? 'show' : 'hidden'}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-5 lg:gap-6"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-4 lg:gap-5"
         >
-          <PortfolioItem client={clients[0]} className="lg:col-span-7" />
-          <PortfolioItem client={clients[1]} className="lg:col-span-5" />
-          <PortfolioItem client={clients[2]} className="lg:col-span-5" />
-          <PortfolioItem client={clients[3]} className="lg:col-span-7" />
+          {clients.map((client) => (
+            <PortfolioItem key={client.id} client={client} />
+          ))}
         </motion.div>
       </div>
     </section>
   )
 }
 
-function PortfolioItem({ client, className }: { client: Client; className: string }) {
+function PortfolioItem({ client }: { client: Client }) {
+  const heightClass = client.featured
+    ? 'h-[50vh] max-h-[580px] min-h-[320px]'
+    : client.strip
+    ? 'h-[28vh] max-h-[280px] min-h-[180px]'
+    : 'h-[42vh] max-h-[460px] min-h-[260px]'
+
   return (
     <motion.div
       variants={cardVariants}
-      className={`group relative rounded-2xl overflow-hidden bg-surface-white shadow-[0_2px_20px_rgba(26,42,79,0.06)] hover:shadow-[0_14px_52px_rgba(26,42,79,0.15)] hover:-translate-y-1.5 transition-all duration-500 ${className}`}
+      className={`group relative rounded-2xl overflow-hidden cursor-pointer ${client.lgColSpan} ${heightClass}`}
+      style={{
+        transition: 'transform 0.6s cubic-bezier(0.22,1,0.36,1), box-shadow 0.5s ease',
+      }}
+      whileHover={{ scale: 1.015 }}
     >
       {/*
-        Logo placeholder area.
-        TODO: Replace <LogoPlaceholder> with a real image when assets are ready:
-        <img src="/portfolio/{client.id}.png" alt={client.name} className="w-full h-full object-cover" />
+        TODO: Replace <LogoPlaceholder> with real image:
+        <img src="/portfolio/{client.id}.png" alt={client.name} className="absolute inset-0 w-full h-full object-cover" />
       */}
-      <div className="relative h-56 lg:h-64 overflow-hidden">
+      <div className="absolute inset-0">
         <LogoPlaceholder clientId={client.id} />
-
-        {/* Hover overlay */}
-        <div className="absolute inset-0 bg-brand/0 group-hover:bg-brand/55 flex items-end justify-end p-6 transition-colors duration-300">
-          <div className="w-10 h-10 rounded-full bg-white/0 group-hover:bg-white/15 flex items-center justify-center opacity-0 translate-x-3 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
-            <ArrowUpRight size={18} className="text-white" />
-          </div>
-        </div>
       </div>
 
-      {/* Info */}
-      <div className="p-6 lg:p-7 bg-surface-white">
-        <span className="font-body text-[10px] tracking-[0.2em] uppercase text-brand/35 block mb-2">
-          {client.category}
-        </span>
-        <div className="flex items-start justify-between gap-4">
-          <div>
+      {/* Gradient overlay for legibility */}
+      <div
+        className={`absolute inset-0 transition-opacity duration-500 ${
+          client.id === 'irene'
+            ? 'bg-gradient-to-t from-black/80 via-black/30 to-black/5'
+            : 'bg-gradient-to-t from-black/75 via-black/20 to-transparent'
+        }`}
+      />
+
+      {/* Hover reveal — top-right arrow */}
+      <div className="absolute top-5 right-5 w-10 h-10 rounded-full bg-white/0 group-hover:bg-white/15 flex items-center justify-center opacity-0 -translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-400">
+        <ArrowUpRight size={16} className="text-white" />
+      </div>
+
+      {/* Decorative number — upper right */}
+      <div
+        aria-hidden="true"
+        className={`absolute right-5 pointer-events-none select-none text-white/[0.07] font-display font-semibold leading-none ${
+          client.featured ? 'top-4' : 'top-3'
+        }`}
+        style={{
+          fontSize: client.featured
+            ? 'clamp(7rem, 12vw, 14rem)'
+            : 'clamp(5rem, 9vw, 10rem)',
+          fontVariationSettings: "'opsz' 144",
+        }}
+      >
+        {client.displayNum}
+      </div>
+
+      {/* Content overlay — bottom */}
+      <div
+        className={`absolute inset-x-0 bottom-0 ${
+          client.strip ? 'p-6 md:p-8' : client.featured ? 'p-8 lg:p-12' : 'p-6 lg:p-8'
+        } ${client.strip ? 'flex items-center justify-between gap-6' : ''}`}
+      >
+        {client.strip ? (
+          /* Compact horizontal strip layout */
+          <>
+            <div>
+              <span className="font-body text-[9px] tracking-[0.25em] uppercase text-white/50 block mb-2">
+                {client.category}
+              </span>
+              <h3
+                className="font-display text-2xl lg:text-3xl font-semibold text-white leading-tight"
+                style={{ fontVariationSettings: "'opsz' 72" }}
+              >
+                {client.name}
+              </h3>
+            </div>
+            <div className="flex-shrink-0">
+              <p className="font-body text-sm text-white/55 max-w-xs hidden md:block">
+                {client.description}
+              </p>
+            </div>
+            <div className="flex-shrink-0 hidden lg:flex items-center gap-2 text-white/50 group-hover:text-white/90 transition-colors duration-300 font-body text-xs tracking-wider uppercase">
+              Ver proyecto <ArrowUpRight size={14} />
+            </div>
+          </>
+        ) : (
+          /* Full overlay layout */
+          <>
+            <span className="font-body text-[9px] tracking-[0.28em] uppercase text-white/55 block mb-3">
+              {client.category}
+            </span>
             <h3
-              className="font-display text-xl font-semibold text-brand leading-tight"
+              className={`font-display font-semibold text-white leading-[1.05] mb-2 ${
+                client.featured
+                  ? 'text-4xl lg:text-5xl xl:text-6xl'
+                  : 'text-3xl lg:text-4xl'
+              }`}
               style={{ fontVariationSettings: "'opsz' 72" }}
             >
               {client.name}
             </h3>
             {client.tagline && (
-              <p className="font-body text-sm text-brand/50 mt-0.5 italic">{client.tagline}</p>
+              <p className="font-body text-sm text-white/55 italic mb-2">{client.tagline}</p>
             )}
-          </div>
-          <div className="flex-shrink-0 w-8 h-8 rounded-full border border-brand/10 flex items-center justify-center text-brand/30 group-hover:bg-brand group-hover:border-brand group-hover:text-white transition-all duration-300 mt-0.5">
-            <ArrowUpRight size={14} />
-          </div>
-        </div>
-        <p className="font-body text-sm text-brand/45 mt-3 leading-relaxed">{client.description}</p>
+            <p
+              className={`font-body text-sm text-white/55 leading-relaxed transition-all duration-500 ${
+                client.featured ? 'max-w-xl' : 'max-w-sm'
+              }`}
+            >
+              {client.description}
+            </p>
+          </>
+        )}
       </div>
     </motion.div>
   )
 }
 
 function LogoPlaceholder({ clientId }: { clientId: string }) {
-  const base = 'relative w-full h-full flex items-center justify-center overflow-hidden'
+  const base = 'absolute inset-0 w-full h-full flex items-center justify-center overflow-hidden'
 
   if (clientId === 'inter-express') {
     return (
       <div className={base} style={{ background: 'linear-gradient(135deg, #070E1C 0%, #0F1E40 100%)' }}>
-        {/* Speed lines */}
         <div className="absolute inset-0">
           {[...Array(7)].map((_, i) => (
-            <div
-              key={i}
-              className="absolute top-0 bottom-0 w-px"
-              style={{
-                left: `${10 + i * 13}%`,
-                background: 'rgba(255,255,255,0.06)',
-                transform: 'skewX(-20deg)',
-              }}
-            />
+            <div key={i} className="absolute top-0 bottom-0 w-px" style={{ left: `${10 + i * 13}%`, background: 'rgba(255,255,255,0.06)', transform: 'skewX(-20deg)' }} />
           ))}
         </div>
-        <div className="relative text-center select-none">
-          <div className="font-body text-[9px] tracking-[0.35em] text-white/25 uppercase mb-3">
-            logotipo · placeholder
-          </div>
-          <div
-            className="font-display font-semibold text-white leading-none"
-            style={{ fontSize: 'clamp(2rem, 5vw, 3rem)', fontVariationSettings: "'opsz' 72" }}
-          >
-            INTER
-          </div>
-          <div className="font-display text-lg text-white/40 tracking-[0.18em] mt-1">
-            EXPRESS GT
-          </div>
+        <div className="relative text-center select-none opacity-30">
+          <div className="font-display font-semibold text-white leading-none" style={{ fontSize: 'clamp(4rem, 10vw, 8rem)', fontVariationSettings: "'opsz' 72" }}>INTER</div>
+          <div className="font-display text-xl text-white/50 tracking-[0.2em] mt-1">EXPRESS GT</div>
         </div>
       </div>
     )
@@ -203,22 +254,10 @@ function LogoPlaceholder({ clientId }: { clientId: string }) {
   if (clientId === 'dexa') {
     return (
       <div className={base} style={{ background: 'linear-gradient(160deg, #0D1117 0%, #1A1A2E 100%)' }}>
-        {/* Rotating diamond borders */}
-        <div className="absolute w-52 h-52 border border-white/[0.04] rotate-45 rounded-sm" />
+        <div className="absolute w-56 h-56 border border-white/[0.04] rotate-45 rounded-sm" />
         <div className="absolute w-36 h-36 border border-white/[0.07] rotate-45 rounded-sm" />
-        <div className="relative text-center select-none">
-          <div className="font-body text-[9px] tracking-[0.35em] text-white/25 uppercase mb-3">
-            logotipo · placeholder
-          </div>
-          <div
-            className="font-display font-semibold text-white leading-none"
-            style={{ fontSize: 'clamp(2.5rem, 6vw, 3.5rem)', fontVariationSettings: "'opsz' 72" }}
-          >
-            DEXA
-          </div>
-          <div className="font-body text-[10px] tracking-[0.28em] text-white/35 uppercase mt-3">
-            Potencia que impulsa
-          </div>
+        <div className="relative text-center select-none opacity-30">
+          <div className="font-display font-semibold text-white leading-none" style={{ fontSize: 'clamp(3rem, 8vw, 6rem)', fontVariationSettings: "'opsz' 72" }}>DEXA</div>
         </div>
       </div>
     )
@@ -227,25 +266,10 @@ function LogoPlaceholder({ clientId }: { clientId: string }) {
   if (clientId === 'irene') {
     return (
       <div className={base} style={{ background: 'linear-gradient(160deg, #F5EFE6 0%, #EDE5D8 100%)' }}>
-        {/* Warm gold radial glow */}
-        <div
-          className="absolute inset-0 opacity-30"
-          style={{ background: 'radial-gradient(circle at 35% 55%, #C9A24B 0%, transparent 55%)' }}
-        />
-        <div className="relative text-center select-none">
-          <div className="font-body text-[9px] tracking-[0.35em] text-brand/30 uppercase mb-3">
-            logotipo · placeholder
-          </div>
-          <div
-            className="font-display font-semibold text-brand/60 leading-none"
-            style={{ fontSize: 'clamp(2.5rem, 6vw, 3.5rem)', fontVariationSettings: "'opsz' 144, 'wght' 400" }}
-          >
-            IC
-          </div>
-          <div className="w-10 h-px bg-gold mx-auto my-3" />
-          <div className="font-body text-[10px] tracking-[0.22em] text-brand/45 uppercase">
-            Irene Cisneros
-          </div>
+        <div className="absolute inset-0 opacity-25" style={{ background: 'radial-gradient(circle at 35% 55%, #C9A24B 0%, transparent 55%)' }} />
+        <div className="relative text-center select-none opacity-40">
+          <div className="font-display font-semibold text-brand/60 leading-none" style={{ fontSize: 'clamp(3rem, 8vw, 6rem)', fontVariationSettings: "'opsz' 144, 'wght' 400" }}>IC</div>
+          <div className="w-10 h-px bg-gold/60 mx-auto my-3" />
         </div>
       </div>
     )
@@ -254,28 +278,9 @@ function LogoPlaceholder({ clientId }: { clientId: string }) {
   if (clientId === 'steels') {
     return (
       <div className={base} style={{ background: 'linear-gradient(160deg, #090E18 0%, #131B28 100%)' }}>
-        {/* Grid mesh */}
-        <div
-          className="absolute inset-0 opacity-[0.07]"
-          style={{
-            backgroundImage:
-              'linear-gradient(rgba(255,255,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px)',
-            backgroundSize: '28px 28px',
-          }}
-        />
-        <div className="relative text-center select-none">
-          <div className="font-body text-[9px] tracking-[0.35em] text-white/25 uppercase mb-3">
-            logotipo · placeholder
-          </div>
-          <div
-            className="font-display font-semibold text-white tracking-[0.05em] leading-none"
-            style={{ fontSize: 'clamp(2rem, 5vw, 3rem)', fontVariationSettings: "'opsz' 72" }}
-          >
-            STEELS
-          </div>
-          <div className="font-body text-[10px] tracking-[0.3em] text-white/30 uppercase mt-3">
-            Aceros & Materiales
-          </div>
+        <div className="absolute inset-0 opacity-[0.07]" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px)', backgroundSize: '28px 28px' }} />
+        <div className="relative text-center select-none opacity-30">
+          <div className="font-display font-semibold text-white tracking-[0.05em] leading-none" style={{ fontSize: 'clamp(2.5rem, 6vw, 5rem)', fontVariationSettings: "'opsz' 72" }}>STEELS</div>
         </div>
       </div>
     )

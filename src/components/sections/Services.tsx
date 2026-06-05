@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { motion, useInView } from 'framer-motion'
 import {
   Pen,
@@ -8,6 +8,8 @@ import {
   ImagePlay,
   Layers,
 } from 'lucide-react'
+import { Reveal } from '../animations/Reveal'
+import { WavyUnderline } from '../ui/WavyUnderline'
 
 const services = [
   {
@@ -18,7 +20,6 @@ const services = [
       'Creamos tu logo desde cero. El logo perfecto para que tu marca tenga identidad, estilo y destaque desde el primer vistazo.',
     tag: 'Branding',
     accent: false,
-    lgColSpan: 'lg:col-span-3',
   },
   {
     icon: CreditCard,
@@ -28,7 +29,6 @@ const services = [
       'Una buena primera impresión comienza con una gran tarjeta. Material opalina, paquetes de 50 y 100.',
     tag: 'Impresión',
     accent: false,
-    lgColSpan: 'lg:col-span-3',
   },
   {
     icon: Share2,
@@ -38,7 +38,6 @@ const services = [
       'Manejamos tus redes con creatividad, diseño y contenido que conecta.',
     tag: 'Social Media',
     accent: true,
-    lgColSpan: 'lg:col-span-6',
   },
   {
     icon: Megaphone,
@@ -48,7 +47,6 @@ const services = [
       'Piezas gráficas, menús y material publicitario que hace destacar tu marca.',
     tag: 'Publicidad',
     accent: false,
-    lgColSpan: 'lg:col-span-2',
   },
   {
     icon: ImagePlay,
@@ -58,7 +56,6 @@ const services = [
       'De lo simple a lo impactante. Transformamos tus imágenes con edición profesional.',
     tag: 'Fotografía',
     accent: false,
-    lgColSpan: 'lg:col-span-2',
   },
   {
     icon: Layers,
@@ -68,93 +65,114 @@ const services = [
       'Llevamos tu logo a lo digital y a lo material. Identidad de marca completa y coherente.',
     tag: 'Identidad',
     accent: false,
-    lgColSpan: 'lg:col-span-2',
   },
 ]
 
-const containerVariants = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.09 } },
-}
-
-const cardVariants = {
-  hidden: { opacity: 0, y: 36 },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] },
-  },
-}
-
 export default function Services() {
-  const ref = useRef<HTMLDivElement>(null)
-  const inView = useInView(ref, { once: true, margin: '-80px' })
+  const [focused, setFocused] = useState<string | null>(null)
+  const headerRef = useRef<HTMLDivElement>(null)
+  const headerInView = useInView(headerRef, { once: true, margin: '-60px' })
+
+  const isFaded = (num: string) => focused !== null && focused !== num
 
   return (
-    <section id="servicios" className="relative py-28 lg:py-40 bg-surface-white scroll-mt-24">
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-px h-20 bg-gradient-to-b from-transparent to-brand/10" />
-
+    <section id="servicios" className="relative py-24 lg:py-36 bg-white scroll-mt-24">
       <div className="max-w-7xl mx-auto px-6 lg:px-10">
-        {/* Section header */}
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-60px' }}
-          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          className="mb-20 lg:mb-28"
-        >
-          <div className="flex items-center gap-3 mb-6">
-            <span className="h-px w-10 bg-gold" />
-            <span className="text-xs font-medium tracking-[0.2em] uppercase text-brand/40 font-body">
+
+        {/* ── Section header ──────────────────────────────────────── */}
+        <div ref={headerRef} className="mb-20 lg:mb-28">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={headerInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6 }}
+            className="flex items-center gap-3 mb-6"
+          >
+            <span className="h-px w-8 bg-gold" />
+            <span className="text-xs tracking-[0.3em] uppercase text-gray-400 font-body">
               Nuestros Servicios
             </span>
-          </div>
+          </motion.div>
 
-          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
-            <h2
-              className="font-display text-[clamp(2.2rem,5vw,4rem)] font-semibold leading-[1.08] tracking-[-0.02em] text-brand max-w-xl"
+          <div className="overflow-hidden mb-2">
+            <motion.h2
+              initial={{ y: '105%' }}
+              animate={headerInView ? { y: 0 } : {}}
+              transition={{ duration: 0.85, ease: [0.25, 0.1, 0.25, 1] }}
+              className="font-display font-semibold text-[clamp(2.2rem,5vw,3.8rem)] leading-[1.05] tracking-[-0.02em] text-brand"
               style={{ fontVariationSettings: "'opsz' 144, 'wght' 600" }}
             >
               Todo lo que tu marca{' '}
-              <span style={{ WebkitTextStroke: '1.5px #1A2A4F', color: 'transparent' }}>
+              <span className="relative inline-block" style={{ paddingBottom: '5px' }}>
                 necesita
+                <WavyUnderline delay={0.5} strokeWidth={2} />
               </span>
               , en un solo lugar.
-            </h2>
-
-            <p className="font-body text-sm text-brand/50 max-w-xs leading-relaxed">
-              En Inovate no solo diseñamos, hacemos que tu negocio se note.
-            </p>
+            </motion.h2>
           </div>
-        </motion.div>
 
-        {/* Bento grid — service 03 is full-width at lg */}
-        <motion.div
-          ref={ref}
-          variants={containerVariants}
-          initial="hidden"
-          animate={inView ? 'show' : 'hidden'}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-px bg-brand/[0.07] rounded-3xl overflow-hidden shadow-[0_4px_48px_rgba(26,42,79,0.08)]"
+          <motion.p
+            initial={{ opacity: 0, y: 12 }}
+            animate={headerInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.25 }}
+            className="font-body text-base text-gray-400 font-light mt-4"
+          >
+            En Inovate no solo diseñamos — hacemos que tu negocio se note.
+          </motion.p>
+        </div>
+
+        {/* ── 2 + 1 featured + 3 layout ───────────────────────────── */}
+        <div
+          className="space-y-4 lg:space-y-5"
+          onMouseLeave={() => setFocused(null)}
         >
-          {services.map((service) => (
-            <ServiceCard key={service.number} service={service} />
-          ))}
-        </motion.div>
+          {/* Row 1 — 2 equal columns */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-5">
+            {services.slice(0, 2).map((s) => (
+              <ServiceCard
+                key={s.number}
+                service={s}
+                isFaded={isFaded(s.number)}
+                onFocus={() => setFocused(s.number)}
+              />
+            ))}
+          </div>
+
+          {/* Row 2 — 1 featured full-width */}
+          <ServiceCard
+            service={services[2]}
+            isFaded={isFaded(services[2].number)}
+            onFocus={() => setFocused(services[2].number)}
+            featured
+          />
+
+          {/* Row 3 — 3 equal compact columns */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 lg:gap-5">
+            {services.slice(3).map((s) => (
+              <ServiceCard
+                key={s.number}
+                service={s}
+                isFaded={isFaded(s.number)}
+                onFocus={() => setFocused(s.number)}
+                compact
+              />
+            ))}
+          </div>
+        </div>
 
         {/* Bottom CTA */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-40px' }}
-          transition={{ duration: 0.6, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.6, delay: 0.3 }}
           className="mt-16 flex flex-col sm:flex-row items-center justify-center gap-4"
         >
-          <span className="font-body text-sm text-brand/50">
+          <span className="font-body text-sm text-gray-400">
             ¿Listo para llevar tu marca al siguiente nivel?
           </span>
           <a
             href="#contacto"
-            className="inline-flex items-center gap-2 bg-brand text-white font-body text-sm font-medium px-6 py-3 rounded-full hover:bg-brand-light transition-all duration-300 hover:shadow-[0_4px_20px_rgba(26,42,79,0.22)] hover:-translate-y-0.5"
+            className="btn-wipe inline-flex items-center gap-2 bg-brand text-white font-body text-sm font-medium px-7 py-3 rounded-full transition-shadow duration-300 hover:shadow-[0_4px_20px_rgba(26,42,79,0.22)]"
           >
             Cotiza ahora
           </a>
@@ -164,51 +182,64 @@ export default function Services() {
   )
 }
 
-function ServiceCard({ service }: { service: (typeof services)[0] }) {
-  const Icon = service.icon
+type CardProps = {
+  service: (typeof services)[0]
+  isFaded: boolean
+  onFocus: () => void
+  featured?: boolean
+  compact?: boolean
+}
 
-  /* Featured full-width horizontal layout for the accent service */
-  if (service.accent) {
+function ServiceCard({ service, isFaded, onFocus, featured = false, compact = false }: CardProps) {
+  const Icon = service.icon
+  const cardRef = useRef<HTMLDivElement>(null)
+  const inView = useInView(cardRef, { once: true, margin: '-60px' })
+
+  /* Featured full-width horizontal card (service 03) */
+  if (featured) {
     return (
       <motion.div
-        variants={cardVariants}
-        className={`group relative overflow-hidden bg-brand hover:bg-brand-light transition-all duration-300 cursor-default ${service.lgColSpan}`}
+        ref={cardRef}
+        initial={{ opacity: 0, y: 24 }}
+        animate={inView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+        onMouseEnter={onFocus}
+        style={{ opacity: isFaded ? 0.35 : 1, transition: 'opacity 0.4s ease' }}
+        className="group relative overflow-hidden rounded-2xl bg-brand p-8 lg:p-12 flex flex-col md:flex-row md:items-center gap-8 md:gap-12 border border-brand cursor-default"
       >
-        <div className="relative z-10 p-8 lg:p-10 xl:p-12 flex flex-col md:flex-row md:items-center gap-8 md:gap-12">
-          {/* Left: number + icon + tag */}
-          <div className="flex-shrink-0 flex md:flex-col items-center md:items-start gap-4 md:gap-0">
-            <span className="font-body text-xs font-medium tracking-[0.15em] text-white/40 md:mb-5 block">
-              {service.number}
-            </span>
-            <div className="w-12 h-12 rounded-xl bg-white/10 group-hover:bg-white/15 flex items-center justify-center text-white md:mb-5 transition-all duration-300 group-hover:scale-110">
-              <Icon size={22} strokeWidth={1.5} />
-            </div>
-            <span className="inline-block font-body text-[10px] font-medium tracking-[0.15em] uppercase px-3 py-1.5 rounded-full bg-white/10 text-white/60">
-              {service.tag}
-            </span>
+        {/* Left: number + icon + badge */}
+        <div className="flex-shrink-0 flex md:flex-col items-center md:items-start gap-4 md:gap-0">
+          <span className="font-body text-xs tracking-[0.2em] text-white/35 md:mb-5 block">
+            {service.number}
+          </span>
+          <div className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center text-white md:mb-5 group-hover:bg-white/10 transition-all duration-300">
+            <Icon size={20} strokeWidth={1.5} />
           </div>
-
-          {/* Vertical divider */}
-          <div className="hidden md:block w-px h-20 bg-white/10 flex-shrink-0" />
-
-          {/* Right: title + description */}
-          <div className="flex-1">
-            <h3
-              className="font-display text-2xl lg:text-3xl xl:text-4xl font-semibold text-white mb-4"
-              style={{ fontVariationSettings: "'opsz' 72" }}
-            >
-              {service.title}
-            </h3>
-            <p className="font-body text-sm lg:text-base text-white/65 leading-relaxed max-w-2xl">
-              {service.description}
-            </p>
-          </div>
+          <span className="font-body text-[10px] tracking-[0.15em] uppercase px-3 py-1 rounded-full border border-white/20 text-white/50">
+            {service.tag}
+          </span>
         </div>
 
-        {/* Ghosted decorative number */}
+        <div className="hidden md:block w-px h-20 bg-white/10 flex-shrink-0" />
+
+        {/* Right: title + desc */}
+        <div className="flex-1">
+          <h3
+            className="font-display text-2xl lg:text-3xl xl:text-4xl font-semibold text-white mb-4"
+            style={{ fontVariationSettings: "'opsz' 72" }}
+          >
+            {service.title}
+          </h3>
+          <p className="font-body text-sm lg:text-base text-white/60 leading-relaxed max-w-2xl">
+            {service.description}
+          </p>
+        </div>
+
+        {/* Ghost number */}
         <div
-          className="absolute right-4 -bottom-4 font-display font-semibold leading-none text-white/[0.05] pointer-events-none select-none"
-          style={{ fontSize: 'clamp(7rem, 12vw, 13rem)', fontVariationSettings: "'opsz' 144" }}
+          aria-hidden="true"
+          className="absolute right-4 -bottom-4 font-display font-bold leading-none text-white/[0.04] pointer-events-none select-none"
+          style={{ fontSize: 'clamp(7rem, 12vw, 12rem)', fontVariationSettings: "'opsz' 144" }}
         >
           {service.number}
         </div>
@@ -216,53 +247,64 @@ function ServiceCard({ service }: { service: (typeof services)[0] }) {
     )
   }
 
-  /* Regular card */
+  /* Regular or compact card */
   return (
     <motion.div
-      variants={cardVariants}
-      className={`group relative p-8 lg:p-10 bg-surface-white hover:bg-surface-offwhite transition-all duration-300 cursor-default overflow-hidden ${service.lgColSpan}`}
+      ref={cardRef}
+      initial={{ opacity: 0, y: 24 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+      onMouseEnter={onFocus}
+      style={{ opacity: isFaded ? 0.35 : 1, transition: 'opacity 0.4s ease' }}
+      className={`group relative overflow-hidden rounded-2xl border border-gray-100 hover:border-brand/25 hover:shadow-sm bg-white cursor-default transition-colors duration-500 ${
+        compact ? 'p-6 lg:p-7' : 'p-8 lg:p-10'
+      }`}
     >
-      {/* Number */}
-      <span className="font-body text-xs font-medium tracking-[0.15em] mb-6 block text-brand/20 group-hover:text-brand/30 transition-colors duration-300">
+      {/* Number — corner */}
+      <span className="font-body text-xs tracking-[0.15em] text-gray-300 group-hover:text-brand/40 transition-colors duration-500 block mb-5">
         {service.number}
       </span>
 
-      {/* Icon */}
-      <div className="inline-flex items-center justify-center w-11 h-11 rounded-xl mb-6 bg-surface-mist text-brand group-hover:bg-brand group-hover:text-white group-hover:scale-110 transition-all duration-300">
-        <Icon size={20} strokeWidth={1.5} />
+      {/* Icon in circular container */}
+      <div
+        className={`rounded-full border border-gray-200 flex items-center justify-center text-gray-400 group-hover:border-brand group-hover:text-brand group-hover:bg-brand/[0.04] transition-all duration-500 mb-5 ${
+          compact ? 'w-10 h-10' : 'w-12 h-12'
+        }`}
+      >
+        <Icon size={compact ? 17 : 19} strokeWidth={1.5} />
       </div>
 
-      {/* Tag */}
-      <div className="mb-3">
-        <span className="inline-block font-body text-[10px] font-medium tracking-[0.15em] uppercase px-2.5 py-1 rounded-full bg-brand/5 text-brand/40 group-hover:bg-gold/10 group-hover:text-gold-dark transition-colors duration-300">
-          {service.tag}
-        </span>
-      </div>
+      {/* Badge */}
+      <span className="inline-block font-body text-[10px] tracking-[0.15em] uppercase px-2.5 py-1 rounded-full bg-gray-50 text-gray-400 mb-4">
+        {service.tag}
+      </span>
 
       {/* Title */}
       <h3
-        className="font-display text-xl lg:text-2xl font-semibold text-brand leading-tight mb-3 transition-colors duration-300"
+        className={`font-display font-semibold text-brand leading-tight mb-2.5 ${
+          compact ? 'text-lg' : 'text-xl'
+        }`}
         style={{ fontVariationSettings: "'opsz' 72" }}
       >
         {service.title}
       </h3>
 
       {/* Description */}
-      <p className="font-body text-sm text-brand/55 leading-relaxed transition-colors duration-300">
+      <p className="font-body text-sm text-gray-400 leading-relaxed">
         {service.description}
       </p>
 
-      {/* Hover arrow */}
-      <div className="absolute bottom-8 right-8 w-8 h-8 rounded-full bg-brand text-white flex items-center justify-center opacity-0 translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-          <path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
+      {/* Hover CTA */}
+      <div className="mt-5 flex items-center gap-1.5 font-body text-xs text-brand opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-400">
+        <span>Saber más</span>
+        <span className="group-hover:translate-x-1 transition-transform duration-300">→</span>
       </div>
 
-      {/* Ghosted large background number */}
+      {/* Ghost number background */}
       <div
-        className="absolute -right-2 -bottom-4 font-display font-semibold leading-none text-brand/[0.04] pointer-events-none select-none"
-        style={{ fontSize: 'clamp(5rem, 8vw, 8rem)', fontVariationSettings: "'opsz' 144" }}
+        aria-hidden="true"
+        className="absolute -right-2 -bottom-3 font-display font-bold leading-none text-brand/[0.03] pointer-events-none select-none"
+        style={{ fontSize: 'clamp(5rem, 8vw, 7rem)', fontVariationSettings: "'opsz' 144" }}
       >
         {service.number}
       </div>

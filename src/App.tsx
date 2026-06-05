@@ -6,6 +6,7 @@ import Portfolio from './components/sections/Portfolio'
 import WhyUs from './components/sections/WhyUs'
 import CTA from './components/sections/CTA'
 import Footer from './components/sections/Footer'
+import FloatingWhatsApp from './components/ui/FloatingWhatsApp'
 
 export default function App() {
   return (
@@ -18,6 +19,7 @@ export default function App() {
       <WhyUs />
       <CTA />
       <Footer />
+      <FloatingWhatsApp />
     </div>
   )
 }

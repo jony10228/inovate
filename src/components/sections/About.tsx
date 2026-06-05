@@ -28,6 +28,24 @@ export default function About() {
       <div className="absolute top-1/2 right-0 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-brand/[0.03] blur-[120px] pointer-events-none" />
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-px h-20 bg-gradient-to-b from-transparent to-brand/10" />
 
+      {/* Watermark — fills empty space with editorial intent */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 flex items-center justify-center overflow-hidden pointer-events-none select-none"
+      >
+        <div
+          className="font-display font-bold text-brand whitespace-nowrap"
+          style={{
+            fontSize: 'clamp(8rem, 20vw, 20rem)',
+            opacity: 0.022,
+            fontVariationSettings: "'opsz' 144, 'wght' 900",
+            letterSpacing: '-0.04em',
+          }}
+        >
+          CREATIVIDAD
+        </div>
+      </div>
+
       <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-10">
         {/* Grid with vertical divider */}
         <div ref={ref} className="relative grid grid-cols-1 lg:grid-cols-2">

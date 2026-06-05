@@ -31,8 +31,8 @@ export default function Navbar() {
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-10 flex items-center justify-between">
         {/* Logo */}
-        <a href="#" className="flex items-center gap-2.5 group">
-          <InovateLogo />
+        <a href="#" className="flex items-center group">
+          <img src="/logo.png" alt="INOVATE" style={{ height: '72px', width: 'auto' }} />
         </a>
 
         {/* Desktop Nav */}
@@ -111,51 +111,3 @@ export default function Navbar() {
   )
 }
 
-function InovateLogo() {
-  return (
-    <div className="flex items-center gap-2.5 group">
-      {/* Arrow/mountain mark */}
-      <svg
-        width="32"
-        height="32"
-        viewBox="0 0 32 32"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        className="flex-shrink-0"
-      >
-        <rect width="32" height="32" rx="8" fill="#1A2A4F" />
-        {/* Ascending arrow / mountain shape */}
-        <path
-          d="M7 22L13.5 11L18 17.5L21 14L25 22H7Z"
-          fill="white"
-          opacity="0.15"
-        />
-        <path
-          d="M7 22L13.5 10L18 17L21 13.5L25 22"
-          stroke="white"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          fill="none"
-        />
-        {/* Upward arrow tip on the peak */}
-        <path
-          d="M21 13.5L23.5 10.5L25 13"
-          stroke="#C9A24B"
-          strokeWidth="1.8"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          fill="none"
-        />
-      </svg>
-
-      {/* Wordmark */}
-      <span
-        className="font-display text-xl font-semibold tracking-[0.08em] text-brand group-hover:text-brand-light transition-colors duration-200"
-        style={{ fontVariationSettings: "'opsz' 144" }}
-      >
-        INOVATE
-      </span>
-    </div>
-  )
-}

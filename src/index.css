@@ -5,6 +5,26 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ─── Wipe fill button ─────────────────────────────────────────────────────── */
+.btn-wipe {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.btn-wipe::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: #243A6B;   /* brand-light */
+  border-radius: inherit;
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  transition: transform 0.48s cubic-bezier(0.22, 1, 0.36, 1);
+  z-index: -1;
+}
+.btn-wipe:hover::before {
+  transform: scaleX(1);
+}
 /* ─── Keyframes for decorative CSS animations ─────────────────────────────── */
 @keyframes float-gentle {
   0%, 100% { transform: translateY(0px) rotate(0deg); }
@@ -14,6 +34,26 @@
 @keyframes spin-slow {
   from { transform: rotate(0deg); }
   to   { transform: rotate(360deg); }
+}
+@keyframes blob-drift-1 {
+  0%, 100% { transform: translate(0px, 0px) scale(1); }
+  33%       { transform: translate(30px, -20px) scale(1.05); }
+  66%       { transform: translate(-15px, 25px) scale(0.97); }
+}
+@keyframes blob-drift-2 {
+  0%, 100% { transform: translate(0px, 0px) scale(1); }
+  40%       { transform: translate(-25px, 15px) scale(1.04); }
+  70%       { transform: translate(20px, -18px) scale(0.96); }
+}
+@keyframes blob-drift-3 {
+  0%, 100% { transform: translate(0px, 0px) scale(1); }
+  50%       { transform: translate(18px, 22px) scale(1.06); }
+}
+.blob-1 { animation: blob-drift-1 18s ease-in-out infinite; }
+.blob-2 { animation: blob-drift-2 22s ease-in-out infinite; }
+.blob-3 { animation: blob-drift-3 15s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .blob-1, .blob-2, .blob-3 { animation: none; }
 }
 /* ─────────────────────────────────────────────────────────────────────────── */
 
@@ -63,6 +103,12 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+  }
+
+  /* Dot grid — hero background */
+  .dot-grid {
+    background-image: radial-gradient(circle, rgba(26,42,79,0.055) 1px, transparent 1px);
+    background-size: 28px 28px;
   }
 
   /* Smooth scrollbar */
