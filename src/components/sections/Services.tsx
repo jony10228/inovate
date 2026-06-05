@@ -1,86 +1,83 @@
-import { useRef, useState } from 'react'
-import { motion, useInView } from 'framer-motion'
-import {
-  Pen,
-  CreditCard,
-  Share2,
-  Megaphone,
-  ImagePlay,
-  Layers,
-} from 'lucide-react'
-import { Reveal } from '../animations/Reveal'
+import { useState, useRef } from 'react'
+import { motion, AnimatePresence, useInView } from 'framer-motion'
 import { WavyUnderline } from '../ui/WavyUnderline'
+import tarjetas from '../imagenes/tarjetas.jpg'
 
-const services = [
+const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1]
+
+type Service = {
+  number: string
+  title: string
+  description: string
+  tag: string
+  includes: string[]
+  imageSrc: string | null
+}
+
+const services: Service[] = [
   {
-    icon: Pen,
     number: '01',
     title: 'Diseño de Logos',
-    description:
-      'Creamos tu logo desde cero. El logo perfecto para que tu marca tenga identidad, estilo y destaque desde el primer vistazo.',
+    description: 'Creamos tu logo desde cero. El logo perfecto para que tu marca tenga identidad, estilo y destaque desde el primer vistazo.',
     tag: 'Branding',
-    accent: false,
+    includes: ['Logotipo principal', 'Manual de uso', 'Versiones color/mono', 'Archivos editables'],
+    imageSrc: null,
   },
   {
-    icon: CreditCard,
     number: '02',
     title: 'Tarjetas de Presentación',
-    description:
-      'Una buena primera impresión comienza con una gran tarjeta. Material opalina, paquetes de 50 y 100.',
+    description: 'Una buena primera impresión comienza con una gran tarjeta. Material opalina, paquetes de 50 y 100.',
     tag: 'Impresión',
-    accent: false,
+    includes: ['Material opalina', 'Paquetes 50 · 100 unid.', 'Diseño incluido', 'Entrega rápida'],
+    imageSrc: tarjetas,
   },
   {
-    icon: Share2,
     number: '03',
     title: 'Gestión de Redes Sociales',
-    description:
-      'Manejamos tus redes con creatividad, diseño y contenido que conecta.',
+    description: 'Manejamos tus redes con creatividad, diseño y contenido que conecta con tu audiencia y genera resultados.',
     tag: 'Social Media',
-    accent: true,
+    includes: ['Contenido mensual', 'Diseño de posts', 'Estrategia de marca', 'Reportes'],
+    imageSrc: null,
   },
   {
-    icon: Megaphone,
     number: '04',
     title: 'Diseño y Publicidad',
-    description:
-      'Piezas gráficas, menús y material publicitario que hace destacar tu marca.',
+    description: 'Piezas gráficas, menús y material publicitario que hace destacar tu marca en todos los formatos.',
     tag: 'Publicidad',
-    accent: false,
+    includes: ['Piezas digitales', 'Material impreso', 'Menús', 'Banners y vallas'],
+    imageSrc: null,
   },
   {
-    icon: ImagePlay,
     number: '05',
     title: 'Edición de Imágenes',
-    description:
-      'De lo simple a lo impactante. Transformamos tus imágenes con edición profesional.',
+    description: 'De lo simple a lo impactante. Transformamos tus imágenes con edición profesional de alto nivel.',
     tag: 'Fotografía',
-    accent: false,
+    includes: ['Retoque profesional', 'Composición digital', 'Fondo personalizado', 'Entrega en 24h'],
+    imageSrc: null,
   },
   {
-    icon: Layers,
     number: '06',
     title: 'Branding Digital y Material',
-    description:
-      'Llevamos tu logo a lo digital y a lo material. Identidad de marca completa y coherente.',
+    description: 'Llevamos tu logo a lo digital y a lo material. Identidad de marca completa y coherente en todos los soportes.',
     tag: 'Identidad',
-    accent: false,
+    includes: ['Aplicaciones digitales', 'Material impreso', 'Uniformes', 'Guía de marca'],
+    imageSrc: null,
   },
 ]
 
 export default function Services() {
-  const [focused, setFocused] = useState<string | null>(null)
+  const [active, setActive] = useState<string | null>(null)
   const headerRef = useRef<HTMLDivElement>(null)
   const headerInView = useInView(headerRef, { once: true, margin: '-60px' })
 
-  const isFaded = (num: string) => focused !== null && focused !== num
+  const toggle = (num: string) => setActive(prev => (prev === num ? null : num))
 
   return (
     <section id="servicios" className="relative py-24 lg:py-36 bg-white scroll-mt-24">
       <div className="max-w-7xl mx-auto px-6 lg:px-10">
 
-        {/* ── Section header ──────────────────────────────────────── */}
-        <div ref={headerRef} className="mb-20 lg:mb-28">
+        {/* ── Header ──────────────────────────────────────────────── */}
+        <div ref={headerRef} className="mb-16 lg:mb-20">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={headerInView ? { opacity: 1, y: 0 } : {}}
@@ -93,21 +90,32 @@ export default function Services() {
             </span>
           </motion.div>
 
-          <div className="overflow-hidden mb-2">
-            <motion.h2
-              initial={{ y: '105%' }}
-              animate={headerInView ? { y: 0 } : {}}
-              transition={{ duration: 0.85, ease: [0.25, 0.1, 0.25, 1] }}
-              className="font-display font-semibold text-[clamp(2.2rem,5vw,3.8rem)] leading-[1.05] tracking-[-0.02em] text-brand"
-              style={{ fontVariationSettings: "'opsz' 144, 'wght' 600" }}
+          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
+            <div className="overflow-hidden">
+              <motion.h2
+                initial={{ y: '105%' }}
+                animate={headerInView ? { y: 0 } : {}}
+                transition={{ duration: 0.85, ease: [0.25, 0.1, 0.25, 1] }}
+                className="font-display font-semibold text-[clamp(2.2rem,5vw,3.8rem)] leading-[1.05] tracking-[-0.02em] text-brand"
+                style={{ fontVariationSettings: "'opsz' 144, 'wght' 600" }}
+              >
+                Todo lo que tu marca{' '}
+                <span className="relative inline-block" style={{ paddingBottom: '5px' }}>
+                  necesita
+                  <WavyUnderline delay={0.5} strokeWidth={2} />
+                </span>
+                , en un solo lugar.
+              </motion.h2>
+            </div>
+
+            <motion.span
+              initial={{ opacity: 0 }}
+              animate={headerInView ? { opacity: 1 } : {}}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              className="font-body text-[10px] tracking-[0.2em] uppercase text-brand/25 flex-shrink-0 lg:pb-1"
             >
-              Todo lo que tu marca{' '}
-              <span className="relative inline-block" style={{ paddingBottom: '5px' }}>
-                necesita
-                <WavyUnderline delay={0.5} strokeWidth={2} />
-              </span>
-              , en un solo lugar.
-            </motion.h2>
+              06 servicios
+            </motion.span>
           </div>
 
           <motion.p
@@ -120,59 +128,38 @@ export default function Services() {
           </motion.p>
         </div>
 
-        {/* ── 2 + 1 featured + 3 layout ───────────────────────────── */}
-        <div
-          className="space-y-4 lg:space-y-5"
-          onMouseLeave={() => setFocused(null)}
+        {/* ── Accordion list ──────────────────────────────────────── */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={headerInView ? { opacity: 1 } : {}}
+          transition={{ duration: 0.5, delay: 0.3 }}
+          className="border-t border-brand/[0.08]"
         >
-          {/* Row 1 — 2 equal columns */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-5">
-            {services.slice(0, 2).map((s) => (
-              <ServiceCard
-                key={s.number}
-                service={s}
-                isFaded={isFaded(s.number)}
-                onFocus={() => setFocused(s.number)}
-              />
-            ))}
-          </div>
+          {services.map((service, i) => (
+            <ServiceRow
+              key={service.number}
+              service={service}
+              index={i}
+              isActive={active === service.number}
+              onToggle={() => toggle(service.number)}
+            />
+          ))}
+        </motion.div>
 
-          {/* Row 2 — 1 featured full-width */}
-          <ServiceCard
-            service={services[2]}
-            isFaded={isFaded(services[2].number)}
-            onFocus={() => setFocused(services[2].number)}
-            featured
-          />
-
-          {/* Row 3 — 3 equal compact columns */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 lg:gap-5">
-            {services.slice(3).map((s) => (
-              <ServiceCard
-                key={s.number}
-                service={s}
-                isFaded={isFaded(s.number)}
-                onFocus={() => setFocused(s.number)}
-                compact
-              />
-            ))}
-          </div>
-        </div>
-
-        {/* Bottom CTA */}
+        {/* ── Bottom CTA ──────────────────────────────────────────── */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-40px' }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="mt-16 flex flex-col sm:flex-row items-center justify-center gap-4"
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="mt-14 flex flex-col sm:flex-row items-center justify-center gap-4"
         >
           <span className="font-body text-sm text-gray-400">
             ¿Listo para llevar tu marca al siguiente nivel?
           </span>
           <a
             href="#contacto"
-            className="btn-wipe inline-flex items-center gap-2 bg-brand text-white font-body text-sm font-medium px-7 py-3 rounded-full transition-shadow duration-300 hover:shadow-[0_4px_20px_rgba(26,42,79,0.22)]"
+            className="btn-wipe inline-flex items-center gap-2 bg-brand text-white font-body text-sm font-medium px-7 py-3 rounded-full hover:shadow-[0_4px_20px_rgba(26,42,79,0.22)] transition-shadow duration-300"
           >
             Cotiza ahora
           </a>
@@ -182,132 +169,107 @@ export default function Services() {
   )
 }
 
-type CardProps = {
-  service: (typeof services)[0]
-  isFaded: boolean
-  onFocus: () => void
-  featured?: boolean
-  compact?: boolean
-}
-
-function ServiceCard({ service, isFaded, onFocus, featured = false, compact = false }: CardProps) {
-  const Icon = service.icon
-  const cardRef = useRef<HTMLDivElement>(null)
-  const inView = useInView(cardRef, { once: true, margin: '-60px' })
-
-  /* Featured full-width horizontal card (service 03) */
-  if (featured) {
-    return (
+function ServiceRow({
+  service,
+  index,
+  isActive,
+  onToggle,
+}: {
+  service: Service
+  index: number
+  isActive: boolean
+  onToggle: () => void
+}) {
+  return (
+    <div
+      className={`border-b border-brand/[0.08] transition-colors duration-300 cursor-pointer ${
+        isActive ? 'bg-brand/[0.025]' : 'hover:bg-brand/[0.015]'
+      }`}
+      onClick={onToggle}
+    >
+      {/* ── Main row ── */}
       <motion.div
-        ref={cardRef}
-        initial={{ opacity: 0, y: 24 }}
-        animate={inView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
-        onMouseEnter={onFocus}
-        style={{ opacity: isFaded ? 0.35 : 1, transition: 'opacity 0.4s ease' }}
-        className="group relative overflow-hidden rounded-2xl bg-brand p-8 lg:p-12 flex flex-col md:flex-row md:items-center gap-8 md:gap-12 border border-brand cursor-default"
+        initial={{ opacity: 0, x: -16 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true, margin: '-40px' }}
+        transition={{ duration: 0.6, delay: index * 0.06, ease: EASE }}
+        className="group flex items-center gap-5 lg:gap-10 py-6 lg:py-8 select-none"
       >
-        {/* Left: number + icon + badge */}
-        <div className="flex-shrink-0 flex md:flex-col items-center md:items-start gap-4 md:gap-0">
-          <span className="font-body text-xs tracking-[0.2em] text-white/35 md:mb-5 block">
-            {service.number}
-          </span>
-          <div className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center text-white md:mb-5 group-hover:bg-white/10 transition-all duration-300">
-            <Icon size={20} strokeWidth={1.5} />
-          </div>
-          <span className="font-body text-[10px] tracking-[0.15em] uppercase px-3 py-1 rounded-full border border-white/20 text-white/50">
-            {service.tag}
-          </span>
-        </div>
-
-        <div className="hidden md:block w-px h-20 bg-white/10 flex-shrink-0" />
-
-        {/* Right: title + desc */}
-        <div className="flex-1">
-          <h3
-            className="font-display text-2xl lg:text-3xl xl:text-4xl font-semibold text-white mb-4"
-            style={{ fontVariationSettings: "'opsz' 72" }}
-          >
-            {service.title}
-          </h3>
-          <p className="font-body text-sm lg:text-base text-white/60 leading-relaxed max-w-2xl">
-            {service.description}
-          </p>
-        </div>
-
-        {/* Ghost number */}
-        <div
-          aria-hidden="true"
-          className="absolute right-4 -bottom-4 font-display font-bold leading-none text-white/[0.04] pointer-events-none select-none"
-          style={{ fontSize: 'clamp(7rem, 12vw, 12rem)', fontVariationSettings: "'opsz' 144" }}
-        >
+        {/* Number */}
+        <span className="font-body text-[10px] tracking-[0.25em] uppercase text-gray-300 flex-shrink-0 w-8 group-hover:text-brand/30 transition-colors duration-300">
           {service.number}
+        </span>
+
+        {/* Title */}
+        <h3
+          className={`font-display font-semibold flex-1 leading-tight transition-colors duration-300 text-2xl sm:text-3xl lg:text-4xl xl:text-[2.7rem] ${
+            isActive ? 'text-brand' : 'text-brand/80 group-hover:text-brand'
+          }`}
+          style={{ fontVariationSettings: "'opsz' 72" }}
+        >
+          {service.title}
+        </h3>
+
+        {/* Tag — hidden on xs */}
+        <span className="hidden sm:block font-body text-[9px] tracking-[0.2em] uppercase px-3 py-1 rounded-full border border-brand/[0.12] text-brand/30 flex-shrink-0 group-hover:border-brand/25 group-hover:text-brand/50 transition-all duration-300">
+          {service.tag}
+        </span>
+
+        {/* Toggle circle */}
+        <div
+          className={`w-8 h-8 rounded-full border flex-shrink-0 flex items-center justify-center transition-all duration-400 ${
+            isActive
+              ? 'border-brand bg-brand text-white rotate-45'
+              : 'border-brand/15 text-brand/30 group-hover:border-brand/40 group-hover:text-brand/60'
+          }`}
+          style={{ transform: isActive ? 'rotate(45deg)' : 'rotate(0deg)', transition: 'transform 0.35s cubic-bezier(0.22,1,0.36,1), background 0.3s, border-color 0.3s, color 0.3s' }}
+        >
+          <span className="text-base leading-none font-light select-none">+</span>
         </div>
       </motion.div>
-    )
-  }
 
-  /* Regular or compact card */
-  return (
-    <motion.div
-      ref={cardRef}
-      initial={{ opacity: 0, y: 24 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-      onMouseEnter={onFocus}
-      style={{ opacity: isFaded ? 0.35 : 1, transition: 'opacity 0.4s ease' }}
-      className={`group relative overflow-hidden rounded-2xl border border-gray-100 hover:border-brand/25 hover:shadow-sm bg-white cursor-default transition-colors duration-500 ${
-        compact ? 'p-6 lg:p-7' : 'p-8 lg:p-10'
-      }`}
-    >
-      {/* Number — corner */}
-      <span className="font-body text-xs tracking-[0.15em] text-gray-300 group-hover:text-brand/40 transition-colors duration-500 block mb-5">
-        {service.number}
-      </span>
+      {/* ── Expanded content ── */}
+      <AnimatePresence initial={false}>
+        {isActive && (
+          <motion.div
+            key="body"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.45, ease: EASE }}
+            className="overflow-hidden"
+          >
+            <div className="pb-10 pl-[52px] lg:pl-[4.5rem] grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-8 items-start">
+              <div>
+                <p className="font-body text-base text-brand/55 leading-relaxed mb-6 max-w-xl">
+                  {service.description}
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {service.includes.map(item => (
+                    <span
+                      key={item}
+                      className="font-body text-xs px-3 py-1.5 rounded-full bg-brand/[0.055] text-brand/55"
+                    >
+                      {item}
+                    </span>
+                  ))}
+                </div>
+              </div>
 
-      {/* Icon in circular container */}
-      <div
-        className={`rounded-full border border-gray-200 flex items-center justify-center text-gray-400 group-hover:border-brand group-hover:text-brand group-hover:bg-brand/[0.04] transition-all duration-500 mb-5 ${
-          compact ? 'w-10 h-10' : 'w-12 h-12'
-        }`}
-      >
-        <Icon size={compact ? 17 : 19} strokeWidth={1.5} />
-      </div>
-
-      {/* Badge */}
-      <span className="inline-block font-body text-[10px] tracking-[0.15em] uppercase px-2.5 py-1 rounded-full bg-gray-50 text-gray-400 mb-4">
-        {service.tag}
-      </span>
-
-      {/* Title */}
-      <h3
-        className={`font-display font-semibold text-brand leading-tight mb-2.5 ${
-          compact ? 'text-lg' : 'text-xl'
-        }`}
-        style={{ fontVariationSettings: "'opsz' 72" }}
-      >
-        {service.title}
-      </h3>
-
-      {/* Description */}
-      <p className="font-body text-sm text-gray-400 leading-relaxed">
-        {service.description}
-      </p>
-
-      {/* Hover CTA */}
-      <div className="mt-5 flex items-center gap-1.5 font-body text-xs text-brand opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-400">
-        <span>Saber más</span>
-        <span className="group-hover:translate-x-1 transition-transform duration-300">→</span>
-      </div>
-
-      {/* Ghost number background */}
-      <div
-        aria-hidden="true"
-        className="absolute -right-2 -bottom-3 font-display font-bold leading-none text-brand/[0.03] pointer-events-none select-none"
-        style={{ fontSize: 'clamp(5rem, 8vw, 7rem)', fontVariationSettings: "'opsz' 144" }}
-      >
-        {service.number}
-      </div>
-    </motion.div>
+              {/* Image preview — only for tarjetas */}
+              {service.imageSrc && (
+                <div className="w-44 h-32 rounded-xl overflow-hidden flex-shrink-0 shadow-md ring-1 ring-black/5">
+                  <img
+                    src={service.imageSrc}
+                    alt={service.title}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
   )
 }

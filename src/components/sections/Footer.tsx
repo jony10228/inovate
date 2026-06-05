@@ -101,10 +101,13 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Divider + Copyright */}
+      {/* Divider + Authority line + Copyright */}
       <div className="max-w-7xl mx-auto px-6">
-        <div className="border-t border-white/10 mt-16 pt-8 pb-8">
-          <p className="text-xs text-white/30 text-center">
+        <div className="border-t border-white/10 mt-16 pt-8 pb-8 flex flex-col gap-3">
+          <p className="text-xs text-white/25 text-center italic font-body">
+            Diseñando marcas en Jalapa, Jutiapa y toda Guatemala desde el primer día.
+          </p>
+          <p className="text-xs text-white/25 text-center font-body">
             © 2026 INOVATE. Todos los derechos reservados.
           </p>
         </div>

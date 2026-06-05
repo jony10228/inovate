@@ -1,48 +1,70 @@
-import { useRef } from 'react'
-import { motion, useInView } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { ArrowUpRight } from 'lucide-react'
+import solares from '../imagenes/solares2.jpg'
+import steels from '../imagenes/steels.jpg'
+import ireneCisneros from '../imagenes/irene cisneros.jpg'
+import locomaterial from '../imagenes/locomaterial.jpg'
 
 const clients = [
   {
-    id: 'inter-express',
-    name: 'Inter Express GT',
-    category: 'Logística & Courier',
-    tagline: null,
-    description: 'Identidad visual completa para servicio de encomiendas a nivel nacional.',
+    id: 'solares',
+    name: 'SOLARES',
+    category: 'Construcción & Inmobiliaria',
+    tag: 'BRANDING',
+    tagline: null as string | null,
+    metrics: 'Identidad visual · Logo + Branding digital',
+    description: 'Identidad visual completa para proyecto inmobiliario.',
     displayNum: '01',
-    featured: true,          // full-width hero
+    featured: true,
+    strip: false,
     lgColSpan: 'lg:col-span-12',
-  },
-  {
-    id: 'dexa',
-    name: 'DEXA',
-    category: 'Industrial',
-    tagline: 'Potencia que impulsa',
-    description: 'Branding poderoso para empresa industrial de alto impacto.',
-    displayNum: '02',
-    featured: false,
-    lgColSpan: 'lg:col-span-7',
-  },
-  {
-    id: 'irene',
-    name: 'Irene Cisneros',
-    category: 'Servicios Legales',
-    tagline: 'Abogada & Notaria',
-    description: 'Imagen profesional y elegante para despacho jurídico.',
-    displayNum: '03',
-    featured: false,
-    lgColSpan: 'lg:col-span-5',
+    imageSrc: solares,
+    overlayColor: 'rgba(0,0,0,0.50)',
   },
   {
     id: 'steels',
     name: 'STEELS',
     category: 'Industrial & Materiales',
-    tagline: null,
-    description: 'Diseño de marca para empresa de aceros y materiales.',
+    tag: 'IDENTIDAD',
+    tagline: null as string | null,
+    metrics: 'Identidad industrial · Logo + Aplicaciones',
+    description: 'Branding poderoso para empresa industrial de alto impacto.',
+    displayNum: '02',
+    featured: false,
+    strip: false,
+    lgColSpan: 'lg:col-span-7',
+    imageSrc: steels,
+    overlayColor: 'rgba(0,0,0,0.55)',
+  },
+  {
+    id: 'irene',
+    name: 'IRENE CISNEROS',
+    category: 'Servicios Legales',
+    tag: 'BRANDING',
+    tagline: 'Abogada & Notaria' as string | null,
+    metrics: 'Identidad profesional · Logo + Material impreso',
+    description: 'Imagen profesional y elegante para despacho jurídico.',
+    displayNum: '03',
+    featured: false,
+    strip: false,
+    lgColSpan: 'lg:col-span-5',
+    imageSrc: ireneCisneros,
+    overlayColor: 'rgba(0,0,0,0.50)',
+  },
+  {
+    id: 'locomaterial',
+    name: 'TRABAJO REAL',
+    category: 'Branding Material',
+    tag: 'BRANDING MATERIAL',
+    tagline: null as string | null,
+    metrics: 'De lo digital a lo material. Llevamos tu marca a todos lados.',
+    description: 'De lo digital a lo material. Llevamos tu marca a todos lados.',
     displayNum: '04',
     featured: false,
-    strip: true,              // compact wide strip
+    strip: true,
     lgColSpan: 'lg:col-span-12',
+    imageSrc: locomaterial,
+    overlayColor: 'rgba(26,42,79,0.70)',
   },
 ]
 
@@ -50,18 +72,15 @@ type Client = (typeof clients)[0]
 
 const containerVariants = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.14 } },
+  show: { transition: { staggerChildren: 0.1 } },
 }
 
 const cardVariants = {
-  hidden: { opacity: 0, y: 28 },
+  hidden: { opacity: 0, y: 32 },
   show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] } },
 }
 
 export default function Portfolio() {
-  const ref = useRef<HTMLDivElement>(null)
-  const inView = useInView(ref, { once: true, margin: '-80px' })
-
   return (
     <section id="portafolio" className="relative py-28 lg:py-40 bg-surface-white scroll-mt-24">
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-px h-20 bg-gradient-to-b from-transparent to-brand/10" />
@@ -101,10 +120,10 @@ export default function Portfolio() {
 
         {/* Editorial grid */}
         <motion.div
-          ref={ref}
           variants={containerVariants}
           initial="hidden"
-          animate={inView ? 'show' : 'hidden'}
+          whileInView="show"
+          viewport={{ once: true, margin: '-80px' }}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-4 lg:gap-5"
         >
           {clients.map((client) => (
@@ -117,70 +136,84 @@ export default function Portfolio() {
 }
 
 function PortfolioItem({ client }: { client: Client }) {
-  const heightClass = client.featured
-    ? 'h-[50vh] max-h-[580px] min-h-[320px]'
+  const sizeClass = client.featured
+    ? 'aspect-[21/9]'
     : client.strip
-    ? 'h-[28vh] max-h-[280px] min-h-[180px]'
-    : 'h-[42vh] max-h-[460px] min-h-[260px]'
+    ? 'min-h-[280px]'
+    : 'aspect-[4/3]'
+
+  const numSize   = client.featured ? '180px' : client.strip ? '100px' : '120px'
+  const numOpacity = client.featured ? 0.038 : 0.05
 
   return (
     <motion.div
       variants={cardVariants}
-      className={`group relative rounded-2xl overflow-hidden cursor-pointer ${client.lgColSpan} ${heightClass}`}
-      style={{
-        transition: 'transform 0.6s cubic-bezier(0.22,1,0.36,1), box-shadow 0.5s ease',
-      }}
-      whileHover={{ scale: 1.015 }}
+      className={`group relative rounded-2xl overflow-hidden cursor-pointer ${client.lgColSpan} ${sizeClass}`}
+      whileHover={{ scale: 1.012 }}
+      style={{ transition: 'transform 0.6s cubic-bezier(0.22,1,0.36,1), box-shadow 0.5s ease' }}
     >
-      {/*
-        TODO: Replace <LogoPlaceholder> with real image:
-        <img src="/portfolio/{client.id}.png" alt={client.name} className="absolute inset-0 w-full h-full object-cover" />
-      */}
-      <div className="absolute inset-0">
-        <LogoPlaceholder clientId={client.id} />
-      </div>
-
-      {/* Gradient overlay for legibility */}
-      <div
-        className={`absolute inset-0 transition-opacity duration-500 ${
-          client.id === 'irene'
-            ? 'bg-gradient-to-t from-black/80 via-black/30 to-black/5'
-            : 'bg-gradient-to-t from-black/75 via-black/20 to-transparent'
-        }`}
+      {/* Real image */}
+      <img
+        src={client.imageSrc}
+        alt={client.name}
+        className="absolute inset-0 w-full h-full object-cover object-center"
+        loading="lazy"
       />
 
-      {/* Hover reveal — top-right arrow */}
-      <div className="absolute top-5 right-5 w-10 h-10 rounded-full bg-white/0 group-hover:bg-white/15 flex items-center justify-center opacity-0 -translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-400">
-        <ArrowUpRight size={16} className="text-white" />
+      {/* Flat colour overlay (per spec) */}
+      <div
+        className="absolute inset-0"
+        style={{ background: client.overlayColor }}
+      />
+
+      {/* Bottom gradient — extra text legibility */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
+
+      {/* Hover dark overlay */}
+      <div className="absolute inset-0 bg-black/18 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-[2]" />
+
+      {/* Service tag — top left */}
+      <div className="absolute top-4 left-4 z-[5]">
+        <span className="font-body text-[9px] tracking-[0.22em] uppercase px-2.5 py-1 rounded-full border border-white/20 text-white/65 bg-black/10 backdrop-blur-sm">
+          {client.tag}
+        </span>
       </div>
 
-      {/* Decorative number — upper right */}
+      {/* Top-right arrow on hover */}
+      <div className="absolute top-4 right-4 z-[5] w-9 h-9 rounded-full bg-white/0 group-hover:bg-white/12 flex items-center justify-center opacity-0 -translate-y-1.5 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-400">
+        <ArrowUpRight size={15} className="text-white" />
+      </div>
+
+      {/* Decorative number */}
       <div
         aria-hidden="true"
-        className={`absolute right-5 pointer-events-none select-none text-white/[0.07] font-display font-semibold leading-none ${
-          client.featured ? 'top-4' : 'top-3'
-        }`}
-        style={{
-          fontSize: client.featured
-            ? 'clamp(7rem, 12vw, 14rem)'
-            : 'clamp(5rem, 9vw, 10rem)',
-          fontVariationSettings: "'opsz' 144",
-        }}
+        className="absolute right-4 top-0 pointer-events-none select-none font-display font-semibold leading-none z-[1] text-white"
+        style={{ fontSize: numSize, fontVariationSettings: "'opsz' 144", opacity: numOpacity }}
       >
         {client.displayNum}
       </div>
 
-      {/* Content overlay — bottom */}
+      {/* Hover centre CTA */}
+      <div className="absolute inset-0 z-[3] flex items-center justify-center pointer-events-none">
+        <div className="flex items-center gap-2 text-white font-body font-medium text-sm border border-white/25 bg-white/10 backdrop-blur-sm px-5 py-2.5 rounded-full opacity-0 translate-y-3 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-400">
+          Ver proyecto <ArrowUpRight size={15} />
+        </div>
+      </div>
+
+      {/* Content — bottom */}
       <div
-        className={`absolute inset-x-0 bottom-0 ${
-          client.strip ? 'p-6 md:p-8' : client.featured ? 'p-8 lg:p-12' : 'p-6 lg:p-8'
-        } ${client.strip ? 'flex items-center justify-between gap-6' : ''}`}
+        className={`absolute inset-x-0 bottom-0 z-[4] ${
+          client.strip
+            ? 'p-6 md:p-8 flex items-end justify-between gap-6'
+            : client.featured
+            ? 'p-8 lg:p-12'
+            : 'p-6 lg:p-8'
+        }`}
       >
         {client.strip ? (
-          /* Compact horizontal strip layout */
           <>
-            <div>
-              <span className="font-body text-[9px] tracking-[0.25em] uppercase text-white/50 block mb-2">
+            <div className="flex-1 min-w-0">
+              <span className="font-body text-[9px] tracking-[0.25em] uppercase text-white/55 block mb-2">
                 {client.category}
               </span>
               <h3
@@ -189,102 +222,38 @@ function PortfolioItem({ client }: { client: Client }) {
               >
                 {client.name}
               </h3>
-            </div>
-            <div className="flex-shrink-0">
-              <p className="font-body text-sm text-white/55 max-w-xs hidden md:block">
-                {client.description}
+              <p className="font-body text-[11px] text-white/45 mt-2 tracking-wide">
+                {client.metrics}
               </p>
             </div>
-            <div className="flex-shrink-0 hidden lg:flex items-center gap-2 text-white/50 group-hover:text-white/90 transition-colors duration-300 font-body text-xs tracking-wider uppercase">
-              Ver proyecto <ArrowUpRight size={14} />
+            <div className="flex-shrink-0 hidden lg:flex items-center gap-2 text-white/40 group-hover:text-white/80 transition-colors duration-300 font-body text-xs tracking-wider uppercase">
+              Ver proyecto <ArrowUpRight size={13} />
             </div>
           </>
         ) : (
-          /* Full overlay layout */
           <>
-            <span className="font-body text-[9px] tracking-[0.28em] uppercase text-white/55 block mb-3">
+            <span className="font-body text-[9px] tracking-[0.28em] uppercase text-white/60 block mb-3">
               {client.category}
             </span>
             <h3
-              className={`font-display font-semibold text-white leading-[1.05] mb-2 ${
-                client.featured
-                  ? 'text-4xl lg:text-5xl xl:text-6xl'
-                  : 'text-3xl lg:text-4xl'
+              className={`font-display font-semibold text-white leading-[1.05] mb-1 ${
+                client.featured ? 'text-4xl lg:text-5xl xl:text-6xl' : 'text-3xl lg:text-4xl'
               }`}
               style={{ fontVariationSettings: "'opsz' 72" }}
             >
               {client.name}
             </h3>
             {client.tagline && (
-              <p className="font-body text-sm text-white/55 italic mb-2">{client.tagline}</p>
+              <p className="font-body text-sm text-white/55 italic mb-1">{client.tagline}</p>
             )}
-            <p
-              className={`font-body text-sm text-white/55 leading-relaxed transition-all duration-500 ${
-                client.featured ? 'max-w-xl' : 'max-w-sm'
-              }`}
-            >
-              {client.description}
-            </p>
+            <div className="mt-3 pt-3 border-t border-white/10">
+              <p className="font-body text-[10px] text-white/50 tracking-wide leading-relaxed">
+                {client.metrics}
+              </p>
+            </div>
           </>
         )}
       </div>
     </motion.div>
   )
-}
-
-function LogoPlaceholder({ clientId }: { clientId: string }) {
-  const base = 'absolute inset-0 w-full h-full flex items-center justify-center overflow-hidden'
-
-  if (clientId === 'inter-express') {
-    return (
-      <div className={base} style={{ background: 'linear-gradient(135deg, #070E1C 0%, #0F1E40 100%)' }}>
-        <div className="absolute inset-0">
-          {[...Array(7)].map((_, i) => (
-            <div key={i} className="absolute top-0 bottom-0 w-px" style={{ left: `${10 + i * 13}%`, background: 'rgba(255,255,255,0.06)', transform: 'skewX(-20deg)' }} />
-          ))}
-        </div>
-        <div className="relative text-center select-none opacity-30">
-          <div className="font-display font-semibold text-white leading-none" style={{ fontSize: 'clamp(4rem, 10vw, 8rem)', fontVariationSettings: "'opsz' 72" }}>INTER</div>
-          <div className="font-display text-xl text-white/50 tracking-[0.2em] mt-1">EXPRESS GT</div>
-        </div>
-      </div>
-    )
-  }
-
-  if (clientId === 'dexa') {
-    return (
-      <div className={base} style={{ background: 'linear-gradient(160deg, #0D1117 0%, #1A1A2E 100%)' }}>
-        <div className="absolute w-56 h-56 border border-white/[0.04] rotate-45 rounded-sm" />
-        <div className="absolute w-36 h-36 border border-white/[0.07] rotate-45 rounded-sm" />
-        <div className="relative text-center select-none opacity-30">
-          <div className="font-display font-semibold text-white leading-none" style={{ fontSize: 'clamp(3rem, 8vw, 6rem)', fontVariationSettings: "'opsz' 72" }}>DEXA</div>
-        </div>
-      </div>
-    )
-  }
-
-  if (clientId === 'irene') {
-    return (
-      <div className={base} style={{ background: 'linear-gradient(160deg, #F5EFE6 0%, #EDE5D8 100%)' }}>
-        <div className="absolute inset-0 opacity-25" style={{ background: 'radial-gradient(circle at 35% 55%, #C9A24B 0%, transparent 55%)' }} />
-        <div className="relative text-center select-none opacity-40">
-          <div className="font-display font-semibold text-brand/60 leading-none" style={{ fontSize: 'clamp(3rem, 8vw, 6rem)', fontVariationSettings: "'opsz' 144, 'wght' 400" }}>IC</div>
-          <div className="w-10 h-px bg-gold/60 mx-auto my-3" />
-        </div>
-      </div>
-    )
-  }
-
-  if (clientId === 'steels') {
-    return (
-      <div className={base} style={{ background: 'linear-gradient(160deg, #090E18 0%, #131B28 100%)' }}>
-        <div className="absolute inset-0 opacity-[0.07]" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px)', backgroundSize: '28px 28px' }} />
-        <div className="relative text-center select-none opacity-30">
-          <div className="font-display font-semibold text-white tracking-[0.05em] leading-none" style={{ fontSize: 'clamp(2.5rem, 6vw, 5rem)', fontVariationSettings: "'opsz' 72" }}>STEELS</div>
-        </div>
-      </div>
-    )
-  }
-
-  return <div className={`${base} bg-surface-mist`} />
 }

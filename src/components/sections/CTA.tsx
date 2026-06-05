@@ -5,7 +5,7 @@ import { WavyUnderline } from '../ui/WavyUnderline'
 export default function CTA() {
   return (
     <section className="relative w-full py-32 text-center bg-[#1A2A4F] overflow-hidden">
-      {/* Noise texture overlay */}
+      {/* Noise texture */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0"
@@ -21,10 +21,10 @@ export default function CTA() {
         className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-[#C9A24B]/10 blur-[120px]"
       />
 
-      <div className="relative z-10 px-6">
+      <div className="relative z-10 px-6 max-w-4xl mx-auto">
         {/* Label */}
         <motion.p
-          className="text-xs tracking-[0.3em] text-white/40 mb-6 uppercase"
+          className="font-body text-xs tracking-[0.3em] text-white/35 mb-6 uppercase"
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -35,10 +35,10 @@ export default function CTA() {
 
         {/* Headline */}
         <Reveal delay={0.1}>
-          <h2 className="text-4xl md:text-6xl lg:text-7xl font-display font-bold text-white leading-tight">
-            Tu marca merece ser{' '}
+          <h2 className="text-4xl md:text-6xl lg:text-7xl font-display font-bold text-white leading-[1.05] tracking-tight">
+            ¿Listo para construir una marca{' '}
             <span className="relative inline-block text-[#C9A24B] pb-3">
-              inolvidable.
+              imposible de ignorar?
               <WavyUnderline delay={0.9} />
             </span>
           </h2>
@@ -46,13 +46,13 @@ export default function CTA() {
 
         {/* Subtext */}
         <motion.p
-          className="text-white/50 text-sm mt-6"
+          className="font-body text-white/45 text-base mt-8 max-w-lg mx-auto leading-relaxed"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.4 }}
         >
-          Cotización sin compromiso. Respuesta en menos de 24 horas.
+          Cada gran marca empezó con una decisión. La tuya empieza hoy.
         </motion.p>
 
         {/* CTA Button */}
@@ -65,9 +65,9 @@ export default function CTA() {
         >
           <a
             href="#contacto"
-            className="group inline-flex items-center gap-2 bg-white text-[#1A2A4F] px-10 py-4 rounded-full font-medium transition-all duration-500 hover:bg-[#C9A24B] hover:text-white"
+            className="group inline-flex items-center gap-2 bg-white text-[#1A2A4F] px-10 py-4 rounded-full font-body font-semibold transition-all duration-500 hover:bg-[#C9A24B] hover:text-white hover:shadow-[0_16px_48px_rgba(201,162,75,0.3)]"
           >
-            Cotiza tu proyecto
+            Quiero empezar ahora
             <span className="inline-block transition-transform duration-300 group-hover:translate-x-[5px]">
               →
             </span>
