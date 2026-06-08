@@ -5,7 +5,6 @@ import {
 } from 'framer-motion'
 import { TrendingUp, Star, Layers } from 'lucide-react'
 import { WavyUnderline } from '../ui/WavyUnderline'
-import video1 from '../videos/video1.mp4'
 
 /* ── Constants ────────────────────────────────────────────────────────────── */
 const EXPO: [number, number, number, number] = [0.16, 1, 0.3, 1]
@@ -106,61 +105,79 @@ export default function Hero() {
       onMouseLeave={() => { mx.set(0); my.set(0) }}
       className="relative min-h-screen flex items-center overflow-hidden bg-white"
     >
-      {/* ── Video background — very subtle movement texture ──────────── */}
-      {!prefersReduced && (
-        <video
-          className="absolute inset-0 w-full h-full object-cover pointer-events-none"
-          style={{ opacity: 0.07, zIndex: 0 }}
-          autoPlay
-          muted
-          loop
-          playsInline
-          src={video1}
-        />
-      )}
-      {/* White wash over video so text stays legible */}
-      <div className="absolute inset-0 bg-white/85" style={{ zIndex: 0 }} />
+      {/* ── Base blanca ───────────────────────────────────────────────── */}
+      <div className="absolute inset-0 bg-white" />
 
-      {/* ── Animated mesh blobs ───────────────────────────────────────── */}
-      {!prefersReduced && (
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="blob-1 absolute rounded-full" style={{
-            width: 900, height: 900, top: '-25%', left: '-18%',
-            background: 'radial-gradient(circle, rgba(26,42,79,0.065) 0%, transparent 70%)',
-            filter: 'blur(80px)',
-          }} />
-          <div className="blob-2 absolute rounded-full" style={{
-            width: 700, height: 700, bottom: '-18%', right: '-8%',
-            background: 'radial-gradient(circle, rgba(201,162,75,0.055) 0%, transparent 70%)',
-            filter: 'blur(70px)',
-          }} />
-          <div className="blob-3 absolute rounded-full" style={{
-            width: 500, height: 500, top: '25%', right: '32%',
-            background: 'radial-gradient(circle, rgba(26,42,79,0.04) 0%, transparent 70%)',
-            filter: 'blur(60px)',
-          }} />
-        </div>
-      )}
-
-      {/* ── Dot grid — fades toward right side ──────────────────────── */}
+      {/* ── 1. Warm radial gradient — gold left, navy right ──────────── */}
       <div
+        aria-hidden="true"
         className="absolute inset-0 pointer-events-none"
         style={{
-          backgroundImage: 'radial-gradient(circle, rgba(26,42,79,0.052) 1px, transparent 1px)',
-          backgroundSize: '30px 30px',
-          WebkitMaskImage: 'radial-gradient(ellipse 90% 90% at 20% 50%, black 0%, transparent 100%)',
-          maskImage: 'radial-gradient(ellipse 90% 90% at 20% 50%, black 0%, transparent 100%)',
+          background: `
+            radial-gradient(ellipse 68% 58% at 18% 50%, rgba(201,162,75,0.13) 0%, transparent 62%),
+            radial-gradient(ellipse 55% 65% at 82% 52%, rgba(26,42,79,0.07) 0%, transparent 62%)
+          `,
         }}
       />
 
-      {/* ── Noise grain ──────────────────────────────────────────────── */}
+      {/* ── 3. Dot grid — left hemisphere, clearly perceptible ───────── */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          backgroundImage: 'radial-gradient(circle, rgba(26,42,79,0.10) 1.2px, transparent 1.2px)',
+          backgroundSize: '30px 30px',
+          WebkitMaskImage: 'radial-gradient(ellipse 140% 100% at 12% 50%, black 0%, transparent 65%)',
+          maskImage: 'radial-gradient(ellipse 140% 100% at 12% 50%, black 0%, transparent 65%)',
+        }}
+      />
+
+      {/* ── 4. Diagonal fine lines — full section, vignette-masked ───── */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          backgroundImage: `repeating-linear-gradient(
+            -45deg,
+            transparent,
+            transparent 28px,
+            rgba(26,42,79,0.028) 28px,
+            rgba(26,42,79,0.028) 29px
+          )`,
+          WebkitMaskImage: 'radial-gradient(ellipse 95% 80% at 50% 50%, black 15%, transparent 72%)',
+          maskImage: 'radial-gradient(ellipse 95% 80% at 50% 50%, black 15%, transparent 72%)',
+        }}
+      />
+
+      {/* ── 5. Concentric arcs SVG — right-anchored ──────────────────── */}
+      <svg
+        aria-hidden="true"
+        className="absolute pointer-events-none"
+        style={{
+          right: '-16%',
+          top: '50%',
+          transform: 'translateY(-50%)',
+          width: 'clamp(520px, 60vw, 920px)',
+          height: 'clamp(520px, 60vw, 920px)',
+          overflow: 'visible',
+        }}
+      >
+        <circle cx="50%" cy="50%" r="48%" fill="none" stroke="rgba(26,42,79,0.075)" strokeWidth="1" />
+        <circle cx="50%" cy="50%" r="37%" fill="none" stroke="rgba(201,162,75,0.068)" strokeWidth="0.8" />
+        <circle cx="50%" cy="50%" r="27%" fill="none" stroke="rgba(26,42,79,0.062)" strokeWidth="0.8" />
+        <circle cx="50%" cy="50%" r="17%" fill="none" stroke="rgba(201,162,75,0.055)" strokeWidth="0.6" />
+      </svg>
+
+      {/* ── 6. Noise grain — premium paper feel ──────────────────────── */}
       <div
         aria-hidden="true"
         className="absolute inset-0 pointer-events-none z-[2]"
         style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
-          backgroundRepeat: 'repeat', backgroundSize: '256px 256px',
-          opacity: 0.025, mixBlendMode: 'overlay' as const,
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
+          backgroundRepeat: 'repeat',
+          backgroundSize: '200px 200px',
+          opacity: 0.042,
+          mixBlendMode: 'overlay' as const,
         }}
       />
 

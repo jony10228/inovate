@@ -5,22 +5,50 @@ import locomaterial from '../imagenes/locomaterial.jpg'
 
 const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1]
 
-const values = [
-  { number: '01', title: 'Creatividad', description: 'Ideas frescas y diseños únicos para cada cliente.' },
-  { number: '02', title: 'Atención personalizada', description: 'Cada proyecto recibe dedicación y cuidado total.' },
-  { number: '03', title: 'Resultados reales', description: 'Diseño estratégico que genera impacto en tu negocio.' },
+const pillars = [
+  {
+    number: '01',
+    title: 'Identidad que posiciona',
+    description:
+      'Una marca bien construida comunica autoridad antes de que digas una sola palabra. Diseñamos para que tu negocio sea la referencia, no una opción más.',
+  },
+  {
+    number: '02',
+    title: 'Diseño con intención',
+    description:
+      'Cada color, forma y tipografía tiene una razón estratégica. No hacemos bonito por hacer bonito — hacemos que cada decisión visual trabaje a favor de tu crecimiento.',
+  },
+  {
+    number: '03',
+    title: 'Presencia en todos los frentes',
+    description:
+      'De las redes al material impreso, tu marca habla con una sola voz. Construimos identidades coherentes que se mantienen sólidas en cada punto de contacto.',
+  },
 ]
+
+const listVariants = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.1, delayChildren: 0.4 } },
+}
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.65, ease: [0.22, 1, 0.36, 1] } },
+}
 
 export default function About() {
   const ref = useRef<HTMLDivElement>(null)
   const inView = useInView(ref, { once: true, margin: '-80px' })
 
   return (
-    <section id="nosotros" className="relative py-28 lg:py-40 bg-surface-mist overflow-hidden scroll-mt-24">
-      {/* Ambient glow */}
-      <div className="absolute top-1/2 right-[5%] -translate-y-1/2 w-[400px] h-[400px] rounded-full bg-brand/[0.03] blur-[120px] pointer-events-none" />
+    <section
+      id="nosotros"
+      className="relative py-20 lg:py-28 bg-surface-mist overflow-hidden scroll-mt-24"
+    >
+      {/* Ambient right glow */}
+      <div className="absolute top-1/2 right-0 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-brand/[0.04] blur-[130px] pointer-events-none" />
 
-      {/* Watermark */}
+      {/* Faint watermark */}
       <div
         aria-hidden="true"
         className="absolute inset-0 flex items-center justify-start overflow-hidden pointer-events-none select-none"
@@ -28,112 +56,137 @@ export default function About() {
         <div
           className="font-display font-bold text-brand whitespace-nowrap"
           style={{
-            fontSize: 'clamp(8rem, 20vw, 20rem)',
-            opacity: 0.018,
+            fontSize: 'clamp(6rem, 16vw, 16rem)',
+            opacity: 0.015,
             fontVariationSettings: "'opsz' 144, 'wght' 900",
             letterSpacing: '-0.04em',
           }}
         >
-          CREATIVIDAD
+          INOVATE
         </div>
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-10">
         <div
           ref={ref}
-          className="grid grid-cols-1 lg:grid-cols-[45%_55%] gap-14 lg:gap-0 items-center"
+          className="grid grid-cols-1 lg:grid-cols-[38%_62%] gap-10 lg:gap-0 items-center"
         >
-          {/* ── Left: text ── */}
-          <div className="lg:pr-12">
+
+          {/* ── Left: text column ──────────────────────────────── */}
+          <div className="lg:pr-14">
+
             {/* Eyebrow */}
             <motion.div
-              initial={{ opacity: 0, y: 10 }}
+              initial={{ opacity: 0, y: 8 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, ease: EASE }}
-              className="flex items-center gap-3 mb-10"
+              transition={{ duration: 0.55, ease: EASE }}
+              className="flex items-center gap-3 mb-7"
             >
-              <span className="h-px w-10 bg-gold" />
-              <span className="text-xs font-medium tracking-[0.2em] uppercase text-brand/40 font-body">
+              <span className="h-px w-8 bg-gold" />
+              <span className="text-[10px] font-medium tracking-[0.25em] uppercase text-brand/35 font-body">
                 Sobre Nosotros
               </span>
             </motion.div>
 
             {/* Title */}
-            <motion.h2
-              initial={{ opacity: 0, x: -28 }}
-              animate={inView ? { opacity: 1, x: 0 } : {}}
-              transition={{ duration: 0.9, ease: EASE }}
-              className="font-display text-[clamp(2.8rem,5.5vw,5rem)] font-semibold leading-[1.0] tracking-[-0.025em] text-brand mb-10"
-              style={{ fontVariationSettings: "'opsz' 144, 'wght' 600" }}
-            >
-              Más que<br />
-              diseño,<br />
-              hacemos<br />
-              que tu{' '}
-              <span style={{ WebkitTextStroke: '1.5px #1A2A4F', color: 'transparent' }}>
-                marca<br />
-                se note.
-              </span>
-            </motion.h2>
+            <div className="overflow-hidden mb-6">
+              <motion.h2
+                initial={{ y: '105%' }}
+                animate={inView ? { y: 0 } : {}}
+                transition={{ duration: 0.85, ease: [0.25, 0.1, 0.25, 1] }}
+                className="font-display font-semibold leading-[1.0] tracking-[-0.025em] text-brand"
+                style={{
+                  fontSize: 'clamp(2.5rem, 5vw, 4.6rem)',
+                  fontVariationSettings: "'opsz' 144, 'wght' 600",
+                }}
+              >
+                Más que diseño,
+                <br />
+                hacemos que tu{' '}
+                <span style={{ WebkitTextStroke: '1.5px #1A2A4F', color: 'transparent' }}>
+                  marca
+                  <br />
+                  se note.
+                </span>
+              </motion.h2>
+            </div>
 
             {/* Description */}
             <motion.p
-              initial={{ opacity: 0, y: 12 }}
+              initial={{ opacity: 0, y: 10 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.7, delay: 0.2, ease: EASE }}
-              className="font-body text-base lg:text-lg text-brand/55 leading-relaxed mb-14"
+              transition={{ duration: 0.65, delay: 0.22, ease: EASE }}
+              className="font-body text-[0.95rem] lg:text-base text-brand/50 leading-[1.75] mb-10"
             >
-              INOVATE es una agencia de publicidad y diseño con base en Jalapa, Guatemala.
-              Combinamos creatividad, diseño y estrategia para que los negocios se vean,
-              crezcan y vendan. Cobertura en Jalapa, Jutiapa y toda Guatemala.
+              Agencia de branding y publicidad en Jalapa, Guatemala. Combinamos
+              estrategia, diseño y ejecución para construir marcas que generan
+              confianza, diferencian y venden.
             </motion.p>
 
-            {/* Values */}
-            <div>
-              {values.map((value, i) => (
+            {/* Pillars */}
+            <motion.div
+              variants={listVariants}
+              initial="hidden"
+              animate={inView ? 'show' : 'hidden'}
+              className="border-t border-brand/[0.08]"
+            >
+              {pillars.map((pillar) => (
                 <motion.div
-                  key={value.title}
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={inView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ duration: 0.6, delay: 0.35 + i * 0.12, ease: EASE }}
-                  className="group flex items-start gap-6 py-7 border-t border-brand/[0.08]"
+                  key={pillar.title}
+                  variants={itemVariants}
+                  className="group flex items-start gap-5 py-5 border-b border-brand/[0.07]"
                 >
-                  <div
-                    className="font-display text-[3.5rem] font-semibold text-brand/[0.1] leading-none flex-shrink-0 w-12 group-hover:text-brand/[0.22] transition-colors duration-300"
-                    style={{ fontVariationSettings: "'opsz' 144" }}
+                  {/* Number */}
+                  <span
+                    className="font-display font-semibold text-brand/[0.12] leading-none flex-shrink-0 mt-0.5 group-hover:text-brand/25 transition-colors duration-300"
+                    style={{ fontSize: '2.4rem', fontVariationSettings: "'opsz' 72" }}
                   >
-                    {value.number}
-                  </div>
-                  <div className="pt-2 flex-1">
-                    <div className="font-body text-sm font-semibold text-brand mb-1.5 group-hover:text-brand-light transition-colors duration-300">
-                      {value.title}
-                    </div>
-                    <div className="font-body text-sm text-brand/50 leading-relaxed">
-                      {value.description}
-                    </div>
+                    {pillar.number}
+                  </span>
+
+                  <div className="flex-1 min-w-0">
+                    <p className="font-body text-[0.8rem] font-semibold text-brand tracking-wide uppercase mb-1.5 group-hover:text-gold transition-colors duration-300">
+                      {pillar.title}
+                    </p>
+                    <p className="font-body text-[0.83rem] text-brand/45 leading-relaxed">
+                      {pillar.description}
+                    </p>
                   </div>
                 </motion.div>
               ))}
-            </div>
+            </motion.div>
 
+            {/* Bottom credential row */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={inView ? { opacity: 1 } : {}}
-              transition={{ delay: 0.85, duration: 0.5 }}
-              className="mt-10 w-12 h-px bg-gold"
-            />
+              transition={{ delay: 0.9, duration: 0.6 }}
+              className="mt-8 flex items-center gap-4"
+            >
+              <span className="h-px w-8 bg-gold/60" />
+              <span className="font-body text-[10px] tracking-[0.2em] uppercase text-brand/25">
+                Jalapa · Jutiapa · Guatemala
+              </span>
+            </motion.div>
           </div>
 
-          {/* ── Right: video ── */}
-          <div className="lg:pl-10 flex items-center lg:mr-[-60px]">
+          {/* ── Right: video column ────────────────────────────── */}
+          <div className="lg:pl-8 flex items-center lg:mr-[-130px]">
             <motion.div
-              initial={{ opacity: 0, x: 80 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.9, ease: EASE }}
-              className="relative w-full min-h-[520px] flex items-center"
+              initial={{ opacity: 0, x: 70, scale: 0.93 }}
+              whileInView={{ opacity: 1, x: 0, scale: 1 }}
+              viewport={{ once: true, margin: '-60px' }}
+              transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+              className="relative w-full"
+              whileHover={{ scale: 1.012, transition: { duration: 0.6, ease: EASE } }}
             >
-              <div className="absolute inset-0 w-full h-full rounded-2xl bg-[#1A2A4F]/5 translate-x-3 translate-y-3 -z-10" />
+              {/* Deep brand frame */}
+              <div className="absolute inset-0 w-full h-full rounded-2xl bg-brand/[0.10] translate-x-6 translate-y-6 -z-10" />
+
+              {/* Gold accent frame */}
+              <div className="absolute inset-0 w-full h-full rounded-2xl bg-gold/[0.08] translate-x-2 translate-y-2 -z-10" />
+
+              {/* Video */}
               <video
                 src={video1}
                 poster={locomaterial}
@@ -141,11 +194,35 @@ export default function About() {
                 muted
                 loop
                 playsInline
-                className="w-full rounded-2xl shadow-2xl ring-1 ring-black/10"
-                style={{ width: '100%', height: '100%', objectFit: 'cover', aspectRatio: '16/9' }}
+                className="w-full rounded-2xl shadow-[0_32px_90px_-8px_rgba(26,42,79,0.26)] ring-1 ring-black/[0.08]"
+                style={{ aspectRatio: '16/9', objectFit: 'cover', display: 'block' }}
               />
+
+              {/* Wipe reveal mask — slides out right-to-left on scroll */}
+              <motion.div
+                initial={{ scaleX: 1 }}
+                whileInView={{ scaleX: 0 }}
+                viewport={{ once: true, margin: '-60px' }}
+                transition={{ duration: 0.8, delay: 0.05, ease: [0.76, 0, 0.24, 1] }}
+                className="absolute inset-0 bg-surface-mist rounded-2xl z-10 origin-right"
+              />
+
+              {/* Floating badge — bottom left */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.85, duration: 0.55, ease: EASE }}
+                className="absolute bottom-4 left-4 z-20 flex items-center gap-2 bg-white/90 backdrop-blur-md px-3.5 py-2 rounded-full shadow-md ring-1 ring-black/[0.06]"
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-gold flex-shrink-0" />
+                <span className="font-body text-[9px] font-semibold tracking-[0.18em] uppercase text-brand/70">
+                  Trabajo real
+                </span>
+              </motion.div>
             </motion.div>
           </div>
+
         </div>
       </div>
     </section>
