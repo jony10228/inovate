@@ -1,7 +1,6 @@
 import { useRef } from 'react'
 import { motion, useInView } from 'framer-motion'
 import video1 from '../videos/video1.mp4'
-import locomaterial from '../imagenes/locomaterial.jpg'
 
 const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1]
 
@@ -171,49 +170,52 @@ export default function About() {
           </div>
 
           {/* ── Right: video column ────────────────────────────── */}
-          <div className="lg:pl-8 flex items-center lg:mr-[-130px]">
+          <div className="lg:pl-6 flex items-center lg:mr-[-160px]">
             <motion.div
-              initial={{ opacity: 0, x: 70, scale: 0.93 }}
+              initial={{ opacity: 0, x: 80, scale: 0.92 }}
               whileInView={{ opacity: 1, x: 0, scale: 1 }}
-              viewport={{ once: true, margin: '-60px' }}
-              transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+              viewport={{ once: true, margin: '-40px' }}
+              transition={{ duration: 1.15, ease: [0.16, 1, 0.3, 1] }}
               className="relative w-full"
-              whileHover={{ scale: 1.012, transition: { duration: 0.6, ease: EASE } }}
+              whileHover={{ scale: 1.01, transition: { duration: 0.7, ease: EASE } }}
             >
-              {/* Deep brand frame */}
-              <div className="absolute inset-0 w-full h-full rounded-2xl bg-brand/[0.10] translate-x-6 translate-y-6 -z-10" />
+              {/* Deep brand frame — layered depth */}
+              <div className="absolute inset-0 w-full h-full rounded-3xl bg-brand/[0.12] translate-x-7 translate-y-7 -z-10" />
+              <div className="absolute inset-0 w-full h-full rounded-3xl bg-gold/[0.09] translate-x-3 translate-y-3 -z-10" />
 
-              {/* Gold accent frame */}
-              <div className="absolute inset-0 w-full h-full rounded-2xl bg-gold/[0.08] translate-x-2 translate-y-2 -z-10" />
-
-              {/* Video */}
+              {/* Video — elemento principal */}
               <video
                 src={video1}
-                poster={locomaterial}
                 autoPlay
                 muted
                 loop
                 playsInline
-                className="w-full rounded-2xl shadow-[0_32px_90px_-8px_rgba(26,42,79,0.26)] ring-1 ring-black/[0.08]"
-                style={{ aspectRatio: '16/9', objectFit: 'cover', display: 'block' }}
+                preload="auto"
+                className="w-full rounded-3xl ring-1 ring-black/[0.07]"
+                style={{
+                  aspectRatio: '16/9',
+                  objectFit: 'cover',
+                  display: 'block',
+                  boxShadow: '0 40px 100px -12px rgba(26,42,79,0.30), 0 8px 24px -4px rgba(26,42,79,0.12)',
+                }}
               />
 
-              {/* Wipe reveal mask — slides out right-to-left on scroll */}
+              {/* Wipe reveal mask */}
               <motion.div
                 initial={{ scaleX: 1 }}
                 whileInView={{ scaleX: 0 }}
-                viewport={{ once: true, margin: '-60px' }}
-                transition={{ duration: 0.8, delay: 0.05, ease: [0.76, 0, 0.24, 1] }}
-                className="absolute inset-0 bg-surface-mist rounded-2xl z-10 origin-right"
+                viewport={{ once: true, margin: '-40px' }}
+                transition={{ duration: 0.85, delay: 0.05, ease: [0.76, 0, 0.24, 1] }}
+                className="absolute inset-0 bg-surface-mist rounded-3xl z-10 origin-right"
               />
 
-              {/* Floating badge — bottom left */}
+              {/* Floating badge */}
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: 0.85, duration: 0.55, ease: EASE }}
-                className="absolute bottom-4 left-4 z-20 flex items-center gap-2 bg-white/90 backdrop-blur-md px-3.5 py-2 rounded-full shadow-md ring-1 ring-black/[0.06]"
+                transition={{ delay: 0.9, duration: 0.55, ease: EASE }}
+                className="absolute bottom-4 left-4 z-20 flex items-center gap-2 bg-white/92 backdrop-blur-md px-3.5 py-2 rounded-full shadow-md ring-1 ring-black/[0.06]"
               >
                 <span className="w-1.5 h-1.5 rounded-full bg-gold flex-shrink-0" />
                 <span className="font-body text-[9px] font-semibold tracking-[0.18em] uppercase text-brand/70">
