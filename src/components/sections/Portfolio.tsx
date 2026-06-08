@@ -246,7 +246,7 @@ function Modal({ client, onClose }: { client: Client; onClose: () => void }) {
                 {[
                   { label: 'Cliente',   value: client.client   },
                   { label: 'Industria', value: client.industry },
-                  { label: 'Año',       value: '2024'          },
+                  { label: 'Año',       value: '2026'          },
                 ].map(({ label, value }, i, arr) => (
                   <div key={label} className="flex items-center gap-6">
                     <div>

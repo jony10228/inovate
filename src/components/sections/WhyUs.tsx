@@ -25,7 +25,7 @@ const reasons = [
     number: '04',
     title: 'Resultados que hablan por sí solos',
     description:
-      'Más de 100 proyectos en Jalapa, Jutiapa y toda Guatemala. Clientes que regresan porque el diseño funcionó.',
+      'Más de 50 proyectos en Jalapa, Jutiapa y toda Guatemala. Clientes que regresan porque el diseño funcionó.',
   },
 ]
 

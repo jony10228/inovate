@@ -292,7 +292,7 @@ export default function Hero() {
               transition={{ delay: 1.1, duration: 0.9 }}
               className="mt-8 font-body text-xs tracking-[0.18em] text-gray-400/55 uppercase text-center lg:text-left"
             >
-              +100 proyectos · Jalapa · Jutiapa · Guatemala
+              +50 proyectos · Jalapa · Jutiapa · Guatemala
             </motion.p>
           </div>
 
